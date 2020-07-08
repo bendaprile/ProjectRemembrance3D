@@ -37,15 +37,15 @@ public class StatMenuController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Strength.GetComponent<Text>().text =        (playerStats.ReturnCoreStat(PlayerStats.CoreStatsEnum.Strength)).ToString();
-        Dexterity.GetComponent<Text>().text =       (playerStats.ReturnCoreStat(PlayerStats.CoreStatsEnum.Dexterity)).ToString();
-        Charisma.GetComponent<Text>().text =        (playerStats.ReturnCoreStat(PlayerStats.CoreStatsEnum.Charisma)).ToString();
-        Intelligence.GetComponent<Text>().text =    (playerStats.ReturnCoreStat(PlayerStats.CoreStatsEnum.Intelligence)).ToString();
-        Toughness.GetComponent<Text>().text =       (playerStats.ReturnCoreStat(PlayerStats.CoreStatsEnum.Toughness)).ToString();
-        Willpower.GetComponent<Text>().text =       (playerStats.ReturnCoreStat(PlayerStats.CoreStatsEnum.Willpower)).ToString();
+        Strength.GetComponent<Text>().text =        (playerStats.ReturnCoreStat(CoreStatsEnum.Strength)).ToString();
+        Dexterity.GetComponent<Text>().text =       (playerStats.ReturnCoreStat(CoreStatsEnum.Dexterity)).ToString();
+        Charisma.GetComponent<Text>().text =        (playerStats.ReturnCoreStat(CoreStatsEnum.Charisma)).ToString();
+        Intelligence.GetComponent<Text>().text =    (playerStats.ReturnCoreStat(CoreStatsEnum.Intelligence)).ToString();
+        Toughness.GetComponent<Text>().text =       (playerStats.ReturnCoreStat(CoreStatsEnum.Toughness)).ToString();
+        Willpower.GetComponent<Text>().text =       (playerStats.ReturnCoreStat(CoreStatsEnum.Willpower)).ToString();
 
-        Vigor.GetComponent<Text>().text =           (playerStats.ReturnDerivedStat(PlayerStats.DerivedStatsEnum.Vigor)).ToString();
-        Cerebral.GetComponent<Text>().text =        (playerStats.ReturnDerivedStat(PlayerStats.DerivedStatsEnum.Cerebral)).ToString();
-        Fortitude.GetComponent<Text>().text =       (playerStats.ReturnDerivedStat(PlayerStats.DerivedStatsEnum.Fortitude)).ToString();
+        Vigor.GetComponent<Text>().text =           (playerStats.ReturnDerivedStat(DerivedStatsEnum.Vigor)).ToString();
+        Cerebral.GetComponent<Text>().text =        (playerStats.ReturnDerivedStat(DerivedStatsEnum.Cerebral)).ToString();
+        Fortitude.GetComponent<Text>().text =       (playerStats.ReturnDerivedStat(DerivedStatsEnum.Fortitude)).ToString();
     }
 }

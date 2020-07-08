@@ -3,35 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class Health : MonoBehaviour
 {
+    [SerializeField] private float maxHealth = 0;
+    [SerializeField] private int Plating = 0;
+    [SerializeField] private int Armor = 0;
 
-    [SerializeField] public float health = 0;
     [SerializeField] private bool destroyOnDeath = true;
     [SerializeField] private Image healthSlider = null;
+    [SerializeField] private bool damageTextEnabled = false;
+
+    [SerializeField] private GameObject damageTextPrefab = null;
     [SerializeField] private EnemyTemplateMaster ETmaster = null;
 
-    public bool isDead = false;
-    private float maxHealth;
+    private Transform FloatingTextParent;
 
-    public enum DamageType
-    {
-        Basic,
-    }
+    public bool isDead = false;
+    private float health;
+
+
+
+    private GameObject regularDoT_number;
+    private GameObject elementalDoT_number;
+    private GameObject trueDoT_number;
 
     private void Start()
     {
-        maxHealth = health;
+        FloatingTextParent = GameObject.Find("FloatingTextParent").transform;
+        health = maxHealth;
 
         if (healthSlider)
         {
-            healthSlider.fillAmount = health / maxHealth;
+            healthSlider.fillAmount = 1f;
         }
+
+        regularDoT_number = null;
+        elementalDoT_number = null;
+        trueDoT_number = null;
     }
 
-    public void take_damage(float damage, bool stun = false, Vector3 force = new Vector3(), DamageType DT = DamageType.Basic)
+    public void take_damage(float damage, bool stun = false, Vector3 force = new Vector3(), DamageType DT = DamageType.Regular, bool isDoT = false)
     {
-        health -= damage;
+        float ModifiedDamage = HealthCalculation(damage, DT);
+        health -= ModifiedDamage;
 
         if (ETmaster && health > 0)
         {
@@ -46,12 +61,95 @@ public class Health : MonoBehaviour
         {
             UpdateHealthBar();
         }
+
+        if (damageTextEnabled)
+        {
+            DisplayDamageText(ModifiedDamage, DT, isDoT);
+        }
+    }
+
+
+    float HealthCalculation(float damage, DamageType DT)
+    {
+        if (DT == DamageType.Regular || DT == DamageType.Elemental)
+        {
+            damage *= (100 / (Armor + 100));
+        }
+
+        if (DT == DamageType.Regular)
+        {
+            damage -= Plating;
+        }
+
+        if(damage < 0)
+        {
+            damage = 0;
+        }
+
+        return damage;
     }
 
     void UpdateHealthBar()
     {
         healthSlider.fillAmount = health / maxHealth;
     }
+
+    void DisplayDamageText(float incomingDamage, DamageType DT, bool isDoT)
+    {
+        if (isDoT) //Keeps one number alive for every type of dot
+        {
+            if(DT == DamageType.Regular)
+            {
+                if(regularDoT_number == null)
+                {
+                    GameObject damageGameObject = Instantiate(damageTextPrefab, FloatingTextParent);
+                    damageGameObject.GetComponent<FloatingTextScript>().Setup(transform.position, incomingDamage, DT);
+                    regularDoT_number = damageGameObject;
+                }
+                else
+                {
+                    Vector3 offsetPOS = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+                    regularDoT_number.GetComponent<FloatingTextScript>().UpdateNumber(offsetPOS, incomingDamage);
+                }
+            }
+            else if(DT == DamageType.Elemental)
+            {
+                if (elementalDoT_number == null)
+                {
+                    GameObject damageGameObject = Instantiate(damageTextPrefab, FloatingTextParent);
+                    damageGameObject.GetComponent<FloatingTextScript>().Setup(transform.position, incomingDamage, DT);
+                    elementalDoT_number = damageGameObject;
+                }
+                else
+                {
+                    Vector3 offsetPOS = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
+                    elementalDoT_number.GetComponent<FloatingTextScript>().UpdateNumber(offsetPOS, incomingDamage);
+                }
+            }
+            else if(DT == DamageType.True)
+            {
+                if (trueDoT_number == null)
+                {
+                    GameObject damageGameObject = Instantiate(damageTextPrefab, FloatingTextParent);
+                    damageGameObject.GetComponent<FloatingTextScript>().Setup(transform.position, incomingDamage, DT);
+                    trueDoT_number = damageGameObject;
+                }
+                else
+                {
+                    Vector3 offsetPOS = new Vector3(transform.position.x, transform.position.y + 3, transform.position.z);
+                    trueDoT_number.GetComponent<FloatingTextScript>().UpdateNumber(offsetPOS, incomingDamage);
+                }
+            }
+        }
+        else
+        {
+            GameObject damageGameObject = Instantiate(damageTextPrefab, FloatingTextParent);
+            damageGameObject.GetComponent<FloatingTextScript>().Setup(transform.position, incomingDamage, DT);
+        }
+    }
+
+
+
 
     void Update()
     {

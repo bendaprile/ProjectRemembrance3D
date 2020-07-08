@@ -137,7 +137,7 @@ public class LightningSphereProjectile : MonoBehaviour
 
             delayed_active[i] = true;
             lightningArrayEnding[i].position = distanceList[i].collider.transform.position;
-            (distanceList[i].collider.gameObject).GetComponent<Health>().take_damage(damage);
+            (distanceList[i].collider.gameObject).GetComponent<Health>().take_damage(damage, DT: DamageType.Elemental, isDoT: true);
         }
 
 

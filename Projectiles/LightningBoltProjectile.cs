@@ -117,11 +117,11 @@ public class LightningBoltProjectile: MonoBehaviour
         {
             if (enemy_strike && other.gameObject.tag == "Player")
             {
-                other.gameObject.GetComponent<Health>().take_damage(damage);
+                other.gameObject.GetComponent<Health>().take_damage(damage, DT: DamageType.Elemental, isDoT: true);
             }
             if (!enemy_strike && other.gameObject.tag == "BasicEnemy")
             {
-                other.gameObject.GetComponent<Health>().take_damage(damage);
+                other.gameObject.GetComponent<Health>().take_damage(damage, DT: DamageType.Elemental, isDoT: true);
             }
         }
     }

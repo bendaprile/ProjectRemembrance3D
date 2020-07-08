@@ -4,20 +4,23 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    [SerializeField] GameObject AXE; //FOR TESTING ONLY TODO
+    [SerializeField] GameObject Axe; //FOR TESTING ONLY TODO
+    [SerializeField] GameObject Pistol; //FOR TESTING ONLY TODO
     public int MaxWeight;
     public int CurrentWeight;
 
 
+    private WeaponController weaponController;
+
 
     private GameObject[] InventoryStorage = new GameObject[1000];
 
-    public GameObject[] EquipedWeapons = new GameObject[2];
+    private GameObject[] EquipedWeapons = new GameObject[2];
     private GameObject EquipedConsumable;
     private GameObject EquipedArmor; //TODO EXPAND TO MORE CATEGORIES
 
 
-
+    //InventoryStorage////////////////////////////////
     public bool AddItem(GameObject item)
     {
         bool itemAdded = false;
@@ -38,14 +41,19 @@ public class Inventory : MonoBehaviour
         InventoryStorage[location] = null;
     }
 
-    public List<(int, GameObject)> ReturnItems(string type)
+    public GameObject ReturnSingleItem(int location)
+    {
+        return InventoryStorage[location];
+    }
+
+    public List<(int, GameObject)> ReturnItems(ItemTypeEnum type)
     {
         List<(int, GameObject)> TempList = new List<(int, GameObject)>();
         for (int i = 0; i < InventoryStorage.Length; i++)
         {
             if (InventoryStorage[i] != null)
             {
-                if (InventoryStorage[i].GetComponent<ItemMaster>().ThisItemsType == type)
+                if (InventoryStorage[i].GetComponent<ItemMaster>().ItemType == type)
                 {
                     TempList.Add((i, InventoryStorage[i]));
                 }
@@ -53,13 +61,30 @@ public class Inventory : MonoBehaviour
         }
         return TempList;
     }
+    //InventoryStorage////////////////////////////////
 
 
+    //EquipedWeapons//////////////////////////////////
+    public GameObject EquipWeapon(int location, GameObject Weapon)
+    {
+        GameObject temp = EquipedWeapons[location];
+        EquipedWeapons[location] = Weapon;
+        weaponController.RefreshWeapons();
+        return temp;
+    }
+
+    public GameObject ReturnWeapon(int location)
+    {
+        return EquipedWeapons[location];
+    }
+    //EquipedWeapons//////////////////////////////////
 
     private void Start() //TESTING ONLY TODO
     {
-        AddItem(AXE);
-        AddItem(AXE);
-        AddItem(AXE);
+        weaponController = GameObject.Find("Player").transform.Find("Body").GetComponent<WeaponController>();
+        AddItem(Axe);
+        AddItem(Axe);
+        AddItem(Axe);
+        AddItem(Pistol);
     }
 }

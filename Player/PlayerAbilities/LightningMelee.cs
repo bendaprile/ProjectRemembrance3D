@@ -119,7 +119,7 @@ public class LightningMelee : Ability
                     }
 
                     lightningArrayEnding[i].position = ColArray[i].transform.position;
-                    ColArray[i].gameObject.GetComponent<Health>().take_damage(damage);
+                    ColArray[i].gameObject.GetComponent<Health>().take_damage(damage, DT: DamageType.Elemental, isDoT: true);
 
                 }
                 else

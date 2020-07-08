@@ -8,33 +8,49 @@ public class UIController : MonoBehaviour
     public GameObject Menu;
     public GameObject HUD;
     public GameObject Map;
+    public GameObject InteractiveObjectMenu;
 
+    public bool GamePaused;
+
+    private bool ExternalMenuOpen;
     private float originalTimeScale;
 
     // Start is called before the first frame update
     void Start()
     {
+        ExternalMenuOpen = false;
         originalTimeScale = Time.timeScale;
     }
 
     // Update is called once per frame
     void Update()
     {
+        GamePaused = !HUD.activeSelf;
+
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Menu.SetActive(!Menu.activeSelf);
-            if (Menu.activeSelf == true)
+            if (ExternalMenuOpen)
             {
-                Paused();
+                ExternalMenuOpen = false;
+                InteractiveObjectMenu.SetActive(false);
+                Unpaused();
             }
             else
             {
-                Unpaused();
+                Menu.SetActive(!Menu.activeSelf);
+                if (Menu.activeSelf == true)
+                {
+                    Paused();
+                }
+                else
+                {
+                    Unpaused();
+                }
             }
         }
 
-
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (!ExternalMenuOpen && Input.GetKeyDown(KeyCode.Tab))
         {
             if (Menu.activeSelf)
             {
@@ -45,6 +61,15 @@ public class UIController : MonoBehaviour
                 Map.SetActive(!Map.activeSelf);
             }
         }
+    }
+
+    public void OpenInteractiveMenu(GameObject container)
+    {
+        Paused();
+        Map.SetActive(false);
+        ExternalMenuOpen = true;
+        InteractiveObjectMenu.SetActive(true);
+        InteractiveObjectMenu.GetComponent<InteractiveObjectMenuUI>().Refresh(container);
     }
 
     void Paused()

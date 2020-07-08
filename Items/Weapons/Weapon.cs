@@ -5,20 +5,20 @@ using UnityEngine;
 public class Weapon : ItemMaster
 {
 
-    public WeaponType weaponType;
+    [SerializeField] public WeaponType weaponType;
+
+    [SerializeField] public DamageType DT = DamageType.Regular;
+
+    [SerializeField] public Vector3 StartingLocation = new Vector3();
+    [SerializeField] public Vector3 StartingRotation = new Vector3();
+    [SerializeField] public Vector3 StartingScale = new Vector3();
 
     public Weapon()
     {
 
     }
 
-    public enum WeaponType
-    {
-        Melee_1H,
-        Melee_2H,
-        Gun_1H,
-        Gun_2H
-    }
+
 
     public virtual void Attack()
     {

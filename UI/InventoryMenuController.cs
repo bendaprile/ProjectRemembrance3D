@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class InventoryMenuController : MonoBehaviour
 {
     [SerializeField] Color HubButtonResetColor;
-    [SerializeField] private GameObject ItemUIPrefab;
+    [SerializeField] private GameObject WeaponUIPrefab_Object;
     [SerializeField]  private GameObject InventoryPanelContent;
 
     private GameObject HubInventoryMenu;
@@ -20,12 +20,25 @@ public class InventoryMenuController : MonoBehaviour
 
     private Inventory InventoryScript;
 
-    private string last_category;
+    private ItemTypeEnum last_category;
 
+    private bool Ran_once;
+
+    private void Awake()
+    {
+        Ran_once = false;
+    }
 
     private void OnEnable()
     {
-        last_category = "";
+        if (Ran_once)
+        {
+            SetupLogic();
+        }
+    }
+
+    private void Start()
+    {
         HubInventoryMenu = GameObject.Find("HubInventoryMenu");
         ConsumableMenu = GameObject.Find("ConsumableMenu");
         ArmorMenu = GameObject.Find("ArmorMenu");
@@ -34,55 +47,63 @@ public class InventoryMenuController : MonoBehaviour
 
         InventoryPanel = GameObject.Find("InventoryPanel");
         TypeDependentPanel = GameObject.Find("TypeDependentPanel");
-
         InventoryScript = GameObject.Find("Player").GetComponent<Inventory>();
+        SetupLogic();
+        Ran_once = true;
+    }
+
+    private void SetupLogic()
+    {
+        last_category = ItemTypeEnum.Misc;
         DestoryInventoryPanel();
         MassDisable();
     }
 
+
+
     public void ConsumableEnable()
     {
         MassDisable();
-        DestoryInventoryPanel();
-        PopulateInventoryPanel("Consumable");
-        last_category = "Consumable";
+        last_category = ItemTypeEnum.Consumable;
         ConsumableMenu.SetActive(true);
+        UpdateInventoryPanel();
         HubInventoryMenu.transform.Find("ConsumableButton").GetComponent<Image>().color = Color.red;
     }
 
     public void ArmorEnable()
     {
         MassDisable();
-        DestoryInventoryPanel();
-        PopulateInventoryPanel("Armor");
-        last_category = "Armor";
+        last_category = ItemTypeEnum.Armor;
         ArmorMenu.SetActive(true);
+        UpdateInventoryPanel();
         HubInventoryMenu.transform.Find("ArmorButton").GetComponent<Image>().color = Color.red;
     }
 
     public void WeaponsEnable()
     {
         MassDisable();
-        DestoryInventoryPanel();
-        PopulateInventoryPanel("Weapon");
-        last_category = "Weapon";
+        last_category = ItemTypeEnum.Weapon;
         WeaponsMenu.SetActive(true);
+        UpdateInventoryPanel();
         HubInventoryMenu.transform.Find("WeaponButton").GetComponent<Image>().color = Color.red;
     }
 
     public void MiscEnable()
     {
         MassDisable();
-        DestoryInventoryPanel();
-        PopulateInventoryPanel("Misc");
-        last_category = "Misc";
+        last_category = ItemTypeEnum.Misc;
         MiscMenu.SetActive(true);
+        UpdateInventoryPanel();
         HubInventoryMenu.transform.Find("MiscButton").GetComponent<Image>().color = Color.red;
     }
 
     private void MassDisable()
     {
         ResetColors();
+        ConsumableMenu.SetActive(false);
+        ArmorMenu.SetActive(false);
+        WeaponsMenu.SetActive(false);
+        MiscMenu.SetActive(false);
     }
 
     private void ResetColors()
@@ -108,7 +129,7 @@ public class InventoryMenuController : MonoBehaviour
         }
     }
 
-    private void PopulateInventoryPanel (string type)
+    private void PopulateInventoryPanel (ItemTypeEnum type)
     {
         List<(int, GameObject)> items = InventoryScript.ReturnItems(type);
 
@@ -116,9 +137,10 @@ public class InventoryMenuController : MonoBehaviour
         {
             ItemMaster itemProperties = item.Item2.GetComponent<ItemMaster>();
 
-            GameObject UIFab = Instantiate(ItemUIPrefab);
-            UIFab.GetComponent<ItemUISetup>().Setup(itemProperties.name, itemProperties.Cost, item.Item1);
+            GameObject UIFab = Instantiate(WeaponUIPrefab_Object);
             UIFab.transform.SetParent(InventoryPanelContent.transform);
+            UIFab.GetComponent<WeaponUIPrefab>().Setup((Weapon)itemProperties, item.Item1);
+
         }
     }
 }

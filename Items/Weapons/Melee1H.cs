@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class Melee1H : Weapon
 {
-    [SerializeField] private float energyCost = 20f;
-    [SerializeField] private float selfForce = 400f;
+    [SerializeField] public float energyCost = 20f;
+    [SerializeField] public float selfForce = 400f;
     [SerializeField] public float comboTimeout = 1f;
 
+    [SerializeField] private float basicAttackForce = 400f;
+    [SerializeField] private float heavyAttackForce = 600f;
+
+    [SerializeField] public float basicAttackDamage = 30f;
+    [SerializeField] public float heavyAttackDamage = 60f;
 
     private Energy energy;
 
@@ -41,7 +46,6 @@ public class Melee1H : Weapon
     private void FixedUpdate()
     {
         ComboTimer();
-        MC.MeleeUpdate(attackAnimIndex);
     }
 
     void ComboTimer()
@@ -57,29 +61,13 @@ public class Melee1H : Weapon
         }
     }
 
-    //public override void EquipItem()
-    //{
-    //    gameObject.SetActive(true);
-    //    //animationUpdater.PlayUpperBodyAnimation("melee_1h_equip");
-    //}
-
-    //public override void UnequipItem()
-    //{
-    //    gameObject.SetActive(false);
-    //    //animationUpdater.PlayUpperBodyAnimation("melee_1h_unequip");
-    //}
-
     public override void Attack()
     {
         if (!attacking && energy.drain_energy(energyCost))
         {
             playerMovement.StopMovement();
             playerMovement.moveState = PlayerMovement.MoveState.Melee;
-
-            if (attackAnimIndex < animNames.Count)
-            {
-                playerMovement.AddForwardForce(selfForce);
-            }
+            playerMovement.AddForwardForce(selfForce);
 
             attacking = true;
             animationUpdater.PlayAnimation(animNames[attackAnimIndex], true);
@@ -88,7 +76,15 @@ public class Melee1H : Weapon
 
     public override void DealDamage()
     {
-        MC.MeleeContactFunc();
+        bool AOE_smash = (attackAnimIndex == 2);
+        if (AOE_smash)
+        {
+            MC.MeleeContactFunc(true, heavyAttackForce, heavyAttackDamage);
+        }
+        else
+        {
+            MC.MeleeContactFunc(false, basicAttackForce, basicAttackDamage);
+        }
     }
 
     public override void AttackFinished()

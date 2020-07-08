@@ -8,14 +8,14 @@ public class PlayerAnimationUpdater : MonoBehaviour
 
     [SerializeField] float transitionFade = 0.25f;
     string currentAnim = "idle";
-    Direction.MoveDir moveDirection;
+    MoveDir moveDirection;
     bool dancing = false;
 
     // Stored references
     Animator animator;
     PlayerMovement playerMovement;
     Direction direction;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -81,16 +81,16 @@ public class PlayerAnimationUpdater : MonoBehaviour
         {
             switch (moveDirection)
             {
-                case Direction.MoveDir.Forward:
+                case MoveDir.Forward:
                     PlayAnimation("run_f_1h");
                     break;
-                case Direction.MoveDir.Right:
+                case MoveDir.Right:
                     PlayAnimation("run_r_1h");
                     break;
-                case Direction.MoveDir.Left:
+                case MoveDir.Left:
                     PlayAnimation("run_l_1h");
                     break;
-                case Direction.MoveDir.Backward:
+                case MoveDir.Backward:
                     PlayAnimation("run_b_1h");
                     break;
             }
@@ -107,16 +107,16 @@ public class PlayerAnimationUpdater : MonoBehaviour
         {
             switch (moveDirection)
             {
-                case Direction.MoveDir.Forward:
+                case MoveDir.Forward:
                     PlayAnimation("walk_f_1h");
                     break;
-                case Direction.MoveDir.Right:
+                case MoveDir.Right:
                     PlayAnimation("walk_r_1h");
                     break;
-                case Direction.MoveDir.Left:
+                case MoveDir.Left:
                     PlayAnimation("walk_l_1h");
                     break;
-                case Direction.MoveDir.Backward:
+                case MoveDir.Backward:
                     PlayAnimation("walk_b_1h");
                     break;
             }
@@ -134,16 +134,16 @@ public class PlayerAnimationUpdater : MonoBehaviour
         {
             switch (moveDirection)
             {
-                case Direction.MoveDir.Forward:
+                case MoveDir.Forward:
                     PlayAnimation("roll_f");
                     break;
-                case Direction.MoveDir.Backward:
+                case MoveDir.Backward:
                     PlayAnimation("roll_b");
                     break;
-                case Direction.MoveDir.Left:
+                case MoveDir.Left:
                     PlayAnimation("roll_l");
                     break;
-                case Direction.MoveDir.Right:
+                case MoveDir.Right:
                     PlayAnimation("roll_r");
                     break;
             }

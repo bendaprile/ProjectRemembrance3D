@@ -5,7 +5,7 @@ using UnityEngine;
 public class WeaponController : MonoBehaviour
 {
     private PlayerMovement playerMovement;
-    private GameObject[] EquipedWeapons = new GameObject[2];
+    private Inventory Inventory;
     
     private bool currentWeapon;
     public GameObject ItemParent;
@@ -13,7 +13,7 @@ public class WeaponController : MonoBehaviour
     private void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
-        EquipedWeapons = GameObject.Find("Player").GetComponent<Inventory>().EquipedWeapons;
+        Inventory = GameObject.Find("Player").GetComponent<Inventory>();
         currentWeapon = false;
     }
 
@@ -28,9 +28,38 @@ public class WeaponController : MonoBehaviour
         }
     }
 
+    public void RefreshWeapons()
+    {
+        if (playerMovement.itemEquipped)
+        {
+            foreach (Transform child in ItemParent.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            if(Inventory.ReturnWeapon(BoolToInt(currentWeapon)) != null)
+            {
+                CleanParenting();
+            }
+        }
+    }
+
     private void EquipWeapon()
     {
-        if (Input.GetKeyDown(KeyCode.Z) && EquipedWeapons[0] != null)
+        bool AnyWeaponReady = false;
+        if (Inventory.ReturnWeapon(0))
+        {
+            AnyWeaponReady = true;
+            currentWeapon = false;
+        }
+        else if (Inventory.ReturnWeapon(1))
+        {
+            AnyWeaponReady = true;
+            currentWeapon = true;
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Z) && AnyWeaponReady)
         {
             if (playerMovement.itemEquipped)
             {
@@ -50,7 +79,7 @@ public class WeaponController : MonoBehaviour
 
     private void SwitchWeapon()
     {
-        if (playerMovement.itemEquipped && Input.GetKeyDown(KeyCode.Q) && EquipedWeapons[1] != null) 
+        if (playerMovement.itemEquipped && Input.GetKeyDown(KeyCode.Q) && Inventory.ReturnWeapon(BoolToInt(!currentWeapon)) != null) //! for the other weapon
         {
             foreach(Transform child in ItemParent.transform)
             {
@@ -62,16 +91,11 @@ public class WeaponController : MonoBehaviour
         }
     }
 
-    public void PickupWeapon()
-    {
-
-    }
-
     private void Attack()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (ItemParent.GetComponentInChildren<Weapon>().weaponType == Weapon.WeaponType.Melee_1H)
+            if (ItemParent.GetComponentInChildren<Weapon>().weaponType == WeaponType.Melee_1H)
             {
                 ItemParent.GetComponentInChildren<Weapon>().Attack();
             }
@@ -97,14 +121,14 @@ public class WeaponController : MonoBehaviour
         return 0;
     }
 
-    private void CleanParenting()
+    private void CleanParenting() //Takes the global transform values and makes them into local values. This way Items can be placed precisely
     {
-        GameObject TempWeapon = Instantiate(EquipedWeapons[BoolToInt(currentWeapon)]);
-        Transform tempTrans = TempWeapon.transform;
+        GameObject TempWeapon = Instantiate(Inventory.ReturnWeapon(BoolToInt(currentWeapon)));
+        Weapon tempWeapon = TempWeapon.GetComponent<Weapon>();
         TempWeapon.transform.SetParent(ItemParent.transform);
 
-        TempWeapon.transform.localEulerAngles = tempTrans.eulerAngles;
-        TempWeapon.transform.localPosition = tempTrans.position;
-        TempWeapon.transform.localScale = tempTrans.lossyScale;
+        TempWeapon.transform.localEulerAngles = tempWeapon.StartingRotation;
+        TempWeapon.transform.localPosition = tempWeapon.StartingLocation;
+        TempWeapon.transform.localScale = tempWeapon.StartingScale;
     }
 }

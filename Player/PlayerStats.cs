@@ -8,10 +8,10 @@ public class PlayerStats : MonoBehaviour
     private GameObject Player;
 
     //////////////////////////////////////
-    public enum CoreStatsEnum { Strength, Dexterity, Charisma, Intelligence, Toughness, Willpower };
+
     private int[] CoreStatsStorage = new int[6];
 
-    public enum DerivedStatsEnum { Vigor, Cerebral, Fortitude };
+
     private int[] DerivedStatsStorage = new int[3];
 
     public void ModifyCoreStat(CoreStatsEnum CoreStatName, int value)
@@ -31,7 +31,6 @@ public class PlayerStats : MonoBehaviour
 
 
     //////////////////////////////////////
-    public enum AttributesEnum { max_health, health_regen, max_energy, max_expanded_energy, energy_regen, expanded_energy_regen };
     private float[] AttributesStorage = new float[6];
     public float ReturnAttribute(AttributesEnum AttributeName)
     {
@@ -41,7 +40,6 @@ public class PlayerStats : MonoBehaviour
 
 
     //////////////////////////////////////
-    public enum SkillsEnum { Lockpicking };
     private int[] SkillsStorage = new int[1];
 
     public void ModifySkill(SkillsEnum SkillName, int value)

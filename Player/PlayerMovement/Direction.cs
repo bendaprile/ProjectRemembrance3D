@@ -20,13 +20,7 @@ public class Direction : MonoBehaviour
         CalculateMovingDirection();
     }
 
-    public enum MoveDir
-    {
-        Forward,
-        Left,
-        Right,
-        Backward
-    }
+
 
     /*
      * Returns the angle of the mouse from -180 to 180

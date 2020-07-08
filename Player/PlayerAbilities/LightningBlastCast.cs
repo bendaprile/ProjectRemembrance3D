@@ -53,7 +53,7 @@ public class LightningBlastCast : Ability
                 LightningEnd.position = hitray.collider.transform.position;
                 if (hitray.collider.tag == "BasicEnemy")
                 {
-                    (hitray.collider.gameObject).GetComponent<Health>().take_damage(damage);
+                    (hitray.collider.gameObject).GetComponent<Health>().take_damage(damage, DT: DamageType.Elemental, isDoT: true);
                 }
             }
         }

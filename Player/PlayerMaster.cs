@@ -12,6 +12,8 @@ public class PlayerMaster : MonoBehaviour
     LightningBoltCast lightningBolt;
     LightningSphereThrow lightningSphere;
 
+    private UIController UIControl;
+
 
     // Start is called before the first frame update
     void Start()
@@ -21,20 +23,26 @@ public class PlayerMaster : MonoBehaviour
         weaponController = GetComponentInChildren<WeaponController>();
         animationUpdater = GetComponentInChildren<PlayerAnimationUpdater>();
         abilitiesController = GetComponentInChildren<AbilitiesController>();
+
+        UIControl = GameObject.Find("UI").GetComponent<UIController>();
     }
 
     private void Update()
     {
-        abilitiesController.HandleAbilities(1f);
+        if (!UIControl.GamePaused)
+        {
+            abilitiesController.HandleAbilities(1f);
 
-        // Player movement
-        playerMovement.UpdatePlayerState();
+            // Player movement
+            playerMovement.UpdatePlayerState();
 
-        // Player animation
-        animationUpdater.UpdateAnimation();
+            // Player animation
+            animationUpdater.UpdateAnimation();
 
-        // Item Controller
-        weaponController.HandleWeapon();
+            // Item Controller
+            weaponController.HandleWeapon();
+        }
+
     }
 
     private void FixedUpdate()
