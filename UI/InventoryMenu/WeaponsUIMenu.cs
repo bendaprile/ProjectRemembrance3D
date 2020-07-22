@@ -17,7 +17,7 @@ public class WeaponsUIMenu : MonoBehaviour
 
     void Start()
     {
-        inv = GameObject.Find("Player").GetComponent<Inventory>();
+        inv = GameObject.Find("Player").GetComponentInChildren<Inventory>();
         InventoryMenu = GameObject.Find("InventoryMenu");
 
         MainWeaponText = GameObject.Find("MainWeaponText").GetComponent<Text>();
@@ -31,14 +31,14 @@ public class WeaponsUIMenu : MonoBehaviour
 
     public void unequipMain()
     {
-        inv.AddItem(inv.EquipWeapon(0, null));
+        inv.UnEquipWeapon(0);
         UpdatePanel();
         InventoryMenu.GetComponent<InventoryMenuController>().UpdateInventoryPanel();
     }
 
     public void unequipSecondary()
     {
-        inv.AddItem(inv.EquipWeapon(1, null));
+        inv.UnEquipWeapon(1);
         UpdatePanel();
         InventoryMenu.GetComponent<InventoryMenuController>().UpdateInventoryPanel();
     }
@@ -54,7 +54,7 @@ public class WeaponsUIMenu : MonoBehaviour
         if (inv.ReturnWeapon(0) != null)
         {
             ItemMaster mainItem = inv.ReturnWeapon(0).GetComponent<ItemMaster>();
-            MainWeaponText.text = mainItem.name;
+            MainWeaponText.text = mainItem.ItemName;
             if(((Weapon)mainItem).weaponType == WeaponType.Melee_1H)
             {
                 Melee1H temp = (Melee1H)mainItem;
@@ -83,7 +83,7 @@ public class WeaponsUIMenu : MonoBehaviour
         if (inv.ReturnWeapon(1) != null)
         {
             ItemMaster secondaryItem = inv.ReturnWeapon(1).GetComponent<ItemMaster>();
-            SecondaryWeaponText.text = secondaryItem.name;
+            SecondaryWeaponText.text = secondaryItem.ItemName;
             if (((Weapon)secondaryItem).weaponType == WeaponType.Melee_1H)
             {
                 Melee1H temp = (Melee1H)secondaryItem;

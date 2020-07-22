@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class Health : MonoBehaviour
 {
     [SerializeField] private float maxHealth = 0;
+    [SerializeField] private float healthRegen = 0;
     [SerializeField] private int Plating = 0;
     [SerializeField] private int Armor = 0;
 
@@ -43,17 +44,39 @@ public class Health : MonoBehaviour
         trueDoT_number = null;
     }
 
-    public void take_damage(float damage, bool stun = false, Vector3 force = new Vector3(), DamageType DT = DamageType.Regular, bool isDoT = false)
+    public void modify_maxHealth(float value)
     {
+        maxHealth = value;
+    }
+    public void modify_healthRegen(float value)
+    {
+        healthRegen = value;
+    }
+    public void modify_Plating(int value)
+    {
+        Plating = value;
+    }
+    public void modify_Armor(int value)
+    {
+        Armor = value;
+    }
+
+    public void take_damage(float damage, bool knockback = false, Vector3 force = new Vector3(), float stun_duration = 0f, DamageType DT = DamageType.Regular, bool isDoT = false)
+    {
+        //stun_duration is used to guarentee a minimum stun duration
         float ModifiedDamage = HealthCalculation(damage, DT);
         health -= ModifiedDamage;
 
         if (ETmaster && health > 0)
         {
             ETmaster.AIenabled = true;
-            if (stun)
+            if (stun_duration > 0)
             {
-                ETmaster.TakeDamageEnemy(force);
+                ETmaster.EnemyStun(stun_duration);
+            }
+            else if (knockback)
+            {
+                ETmaster.EnemyKnockback(force); //Dependent on the animation length
             }
         }
 
@@ -65,6 +88,19 @@ public class Health : MonoBehaviour
         if (damageTextEnabled)
         {
             DisplayDamageText(ModifiedDamage, DT, isDoT);
+        }
+    }
+
+    public void heal(float amount)
+    {
+        if(health < maxHealth)
+        {
+            health += amount;
+        }
+
+        if (healthSlider)
+        {
+            UpdateHealthBar();
         }
     }
 
@@ -161,6 +197,12 @@ public class Health : MonoBehaviour
         else if (health <= 0)
         {
             isDead = true;
+        } 
+        else if(health > maxHealth)
+        {
+            health = maxHealth;
         }
+
+        heal(healthRegen * Time.deltaTime);
     }
 }

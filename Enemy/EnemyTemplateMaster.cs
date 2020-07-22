@@ -7,6 +7,7 @@ public class EnemyTemplateMaster : MonoBehaviour
 {
     [SerializeField] protected float destroyAfterDeathDelay = 60f;
     [SerializeField] bool stunable = true;
+    [SerializeField] bool knockbackable = true;
     public bool AIenabled;
 
     protected GameObject player;
@@ -27,9 +28,11 @@ public class EnemyTemplateMaster : MonoBehaviour
     protected float roam_cd = 0;
     protected float cd_randomness = 0;
     protected float roam_time_tracker = 0;
-    //
+    // Roam logic
+
 
     protected bool cc_immune;
+    protected float StunRelease;
     protected float timer;
     protected float original_speed;
     protected float current_speed;
@@ -55,9 +58,9 @@ public class EnemyTemplateMaster : MonoBehaviour
 
 
 
-    public virtual void TakeDamageEnemy(Vector3 Force = new Vector3())
+    public virtual void EnemyKnockback(Vector3 Force)
     {
-        if (cc_immune || !stunable)
+        if (cc_immune || !knockbackable)
         {
             return;
         }
@@ -67,6 +70,16 @@ public class EnemyTemplateMaster : MonoBehaviour
         rB.AddForce(Force);
     }
 
+    public virtual void EnemyStun(float duration)
+    {
+        if (cc_immune || !stunable)
+        {
+            return;
+        }
+        agent.enabled = false;
+        rB.isKinematic = false;
+        StunRelease = timer + duration;
+    }
 
 
     public virtual void Death()
@@ -136,6 +149,10 @@ public class EnemyTemplateMaster : MonoBehaviour
                 Death(); //Seperated so the "else if" isn't actiavated
             }
         }
+        else if(animationUpdater.disableMovement || StunRelease > timer) //knockback or stun
+        {
+            return;
+        }
         else if (AIenabled)
         {
             AIFunc();
@@ -150,13 +167,10 @@ public class EnemyTemplateMaster : MonoBehaviour
 
     protected virtual void AIFunc()
     {
-        if (!animationUpdater.disableMovement)
-        {
-            rB.isKinematic = true;
-            agent.enabled = true;
-            agent.SetDestination(player.transform.position);
-            animationUpdater.PlayAnimation("run");
-        }
+        rB.isKinematic = true;
+        agent.enabled = true;
+        agent.SetDestination(player.transform.position);
+        animationUpdater.PlayAnimation("run");
     }
 
 

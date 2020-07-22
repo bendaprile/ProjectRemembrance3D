@@ -6,10 +6,10 @@ using UnityEngine.UI;
 public class Energy : MonoBehaviour
 {
 
-    [SerializeField] float maxNormalEnergy = 100f;
-    [SerializeField] float maxExpandedEnergy = 100f;
-    [SerializeField] float energyNormal_regen = .3f;
-    [SerializeField] float energyExpanded_regen = .1f;
+    [SerializeField] private float maxNormalEnergy = 0;
+    [SerializeField] private float maxExpandedEnergy = 0;
+    [SerializeField] private float energyNormal_regen = 0;
+    [SerializeField] private float energyExpanded_regen = 0;
 
     [SerializeField] Image energySlider = null;
     [SerializeField] Image expandedEnergySlider = null;
@@ -24,6 +24,23 @@ public class Energy : MonoBehaviour
 
         energySlider.fillAmount = 1;
         expandedEnergySlider.fillAmount = 1;
+    }
+
+    public void modifymaxNormalEnergy(float value)
+    {
+        maxNormalEnergy = value;
+    }
+    public void modify_maxExpandedEnergy(float value)
+    {
+        maxExpandedEnergy = value;
+    }
+    public void modify_energyNormal_regen(float value)
+    {
+        energyNormal_regen = value;
+    }
+    public void modify_energyExpanded_regen(float value)
+    {
+        energyExpanded_regen = value;
     }
 
 
@@ -61,10 +78,10 @@ public class Energy : MonoBehaviour
         {
             currentEnergy += energyNormal_regen;
         }
-        UpdateHealthBar();
+        UpdateEnergyBar();
     }
 
-    void UpdateHealthBar()
+    void UpdateEnergyBar()
     {
         if(currentEnergy > maxNormalEnergy)
         {

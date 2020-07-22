@@ -48,14 +48,11 @@ public class crocodileAI : EnemyTemplateMaster
             agent.enabled = false;
             next_charge = timer + charge_cooldown;
             animationUpdater.PlayAnimation("sprint");
-            Debug.Log("HERE");
-        } else if(!charge_script.isCharging)
+        } 
+        else if(!charge_script.isCharging)
         {
             cc_immune = false;
-            rB.isKinematic = true;
-            agent.enabled = true;
-            agent.SetDestination(player.transform.position);
-            animationUpdater.PlayAnimation("run");
+            base.AIFunc();
         }
     }
 

@@ -4,36 +4,18 @@ using UnityEngine;
 
 public class LightningBoltCast : Ability
 {
-
     public GameObject lightningBolt;
     public Transform PlayerProjectiles;
-    [SerializeField] private float energyCost = 120f;
     [SerializeField] private float damage = 4f;
 
-    public float cdDelay;
-
-    private Energy energy;
-    private float usable_time;
-
-    private void Start()
+    protected override void Attack()
     {
-        usable_time = 0f;
-        energy = GameObject.Find("Player").GetComponent<Energy>();
-    }
-
-    public override void Attack(float time_dia, float master_counter)
-    {
-        if (master_counter >= usable_time && energy.drain_energy(energyCost))
-        {
-            usable_time = master_counter + cdDelay;
-
-            GameObject clone = Instantiate(lightningBolt, SetPos(), transform.rotation, PlayerProjectiles).gameObject;
-            LightningBoltProjectile LBP = clone.GetComponent<LightningBoltProjectile>();
-            LBP.damage = damage;
-            LBP.AttackDelay = 1f;
-            LBP.time_dia = 1f;
-            LBP.enemy_strike = false;
-        }
+        GameObject clone = Instantiate(lightningBolt, SetPos(), transform.rotation, PlayerProjectiles).gameObject;
+        LightningBoltProjectile LBP = clone.GetComponent<LightningBoltProjectile>();
+        LBP.damage = damage;
+        LBP.AttackDelay = 1f;
+        LBP.time_dia = 1f;
+        LBP.enemy_strike = false;
     }
 
     private Vector3 SetPos()

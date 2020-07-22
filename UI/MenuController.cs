@@ -11,11 +11,13 @@ public class MenuController : MonoBehaviour
 
     private GameObject InventoryMenu;
     private GameObject StatsMenu;
-    private GameObject SkillsMenu;
+    private GameObject SkillMenu;
     private GameObject AbilitiesMenu;
     private GameObject BackgroundImage;
 
     private CombatChecker CombatChecker;
+
+    private bool pulsate;
 
 
     private void OnEnable()
@@ -23,18 +25,18 @@ public class MenuController : MonoBehaviour
         CombatChecker = GameObject.Find("CombatChecker").GetComponent<CombatChecker>();
         BackgroundImage = transform.Find("Image").gameObject;
         HubMenu = transform.Find("HubMenu").gameObject;
-        StatsMenu = transform.Find("StatsMenu").gameObject;
-        InventoryMenu = transform.Find("InventoryMenu").gameObject;
-        SkillsMenu = transform.Find("SkillsMenu").gameObject;
-        AbilitiesMenu = transform.Find("AbilitiesMenu").gameObject;
-
+        SkillMenu = transform.Find("Panel").Find("SkillMenu").gameObject;
+        StatsMenu = transform.Find("Panel").Find("StatsMenu").gameObject;
+        InventoryMenu = transform.Find("Panel").Find("InventoryMenu").gameObject;
+        AbilitiesMenu = transform.Find("Panel").Find("AbilitiesMenu").gameObject;
 
         if (CombatChecker.enemies_nearby)
         {
-            BackgroundImage.GetComponent<Image>().color = new Color(.5f, 0f, 0f, .4f);
+            pulsate = true;
         }
         else
         {
+            pulsate = false;
             BackgroundImage.GetComponent<Image>().color = new Color(0f, 0f, 0f, .4f);
         }
 
@@ -49,9 +51,26 @@ public class MenuController : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (pulsate)
+        {
+            float redness = 0.2f * (2f + Mathf.Sin((float)Time.unscaledTime*.5f)); //goes between .1 and .2
+            BackgroundImage.GetComponent<Image>().color = new Color(redness, 0f, 0f, .9375f);
+        }
+
+    }
+
     private void OnDisable()
     {
         Map.SetActive(false);
+    }
+
+    public void SkillEnable()
+    {
+        MassDisable();
+        SkillMenu.SetActive(true);
+        HubMenu.transform.Find("SkillButton").GetComponent<Image>().color = Color.red;
     }
 
     public void StatsEnable()
@@ -75,14 +94,6 @@ public class MenuController : MonoBehaviour
         HubMenu.transform.Find("AbilitiesButton").GetComponent<Image>().color = Color.red;
     }
 
-
-    public void SkillsEnable()
-    {
-        MassDisable();
-        SkillsMenu.SetActive(true);
-        HubMenu.transform.Find("SkillsButton").GetComponent<Image>().color = Color.red;
-    }
-
     public void InventoryEnable()
     {
         MassDisable();
@@ -92,6 +103,7 @@ public class MenuController : MonoBehaviour
 
     private void MassDisable()
     {
+        SkillMenu.SetActive(false);
         StatsMenu.SetActive(false);
         Map.SetActive(false);
         InventoryMenu.SetActive(false);

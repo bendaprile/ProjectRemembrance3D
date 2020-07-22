@@ -46,7 +46,7 @@ public class MeleeContact : MonoBehaviour
                 directionToTarget.Normalize();
                 Vector3 force = new Vector3(forceMult * directionToTarget.x, 0, forceMult * directionToTarget.z);
                 lightMelee.MeleeAttack(col);
-                col.GetComponent<Health>().take_damage(damage, true, force);
+                col.GetComponent<Health>().take_damage(damage, knockback: true, force: force);
             }
         }
     }

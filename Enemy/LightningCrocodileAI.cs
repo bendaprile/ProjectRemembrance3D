@@ -45,28 +45,19 @@ public class LightningCrocodileAI : EnemyTemplateMaster
 
     protected override void AIFunc()
     {
-
-        if (!animationUpdater.disableMovement)
+        if ((sphere_next_cast <= timer) && sphere_script.clean_LoS())
         {
-
-            if ((sphere_next_cast <= timer) && sphere_script.clean_LoS())
-            {
-
-                animationUpdater.PlayAnimation("sphere_attack");
-                agent.enabled = false;
-                sphere_next_cast = timer + sphere_cast_cooldown;
-            }
-            else if (lightning_next_cast <= timer && lightning_script.attack())
-            {
-                lightning_next_cast = timer + lightning_cast_cooldown;
-            }
-            else if (!animationUpdater.genericBool0)
-            {
-                rB.isKinematic = true;
-                agent.enabled = true;
-                agent.SetDestination(player.transform.position);
-                animationUpdater.PlayAnimation("run");
-            }
+            animationUpdater.PlayAnimation("sphere_attack");
+            agent.enabled = false;
+            sphere_next_cast = timer + sphere_cast_cooldown;
+        }
+        else if (lightning_next_cast <= timer && lightning_script.attack())
+        {
+            lightning_next_cast = timer + lightning_cast_cooldown;
+        }
+        else if (!animationUpdater.genericBool0)
+        {
+            base.AIFunc();
         }
     }
 

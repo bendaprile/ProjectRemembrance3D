@@ -6,8 +6,11 @@ public class Inventory : MonoBehaviour
 {
     [SerializeField] GameObject Axe; //FOR TESTING ONLY TODO
     [SerializeField] GameObject Pistol; //FOR TESTING ONLY TODO
-    public int MaxWeight;
-    public int CurrentWeight;
+    [SerializeField] GameObject FirstAid; //FOR TESTING ONLY TODO 
+
+
+    [SerializeField] private int MaxWeight;
+    [SerializeField] public int CurrentWeight; //Serialize for debug
 
 
     private WeaponController weaponController;
@@ -15,21 +18,31 @@ public class Inventory : MonoBehaviour
 
     private GameObject[] InventoryStorage = new GameObject[1000];
 
-    private GameObject[] EquipedWeapons = new GameObject[2];
-    private GameObject EquipedConsumable;
-    private GameObject EquipedArmor; //TODO EXPAND TO MORE CATEGORIES
+
+    private int[] EquippedWeapons = new int[2]; //-1 means none equipped //Item NOT enabled, this happens when the weapon is readied
+    private int EquippedConsumable; //-1 means none equipped //Item enabled if here
+    private int EquippedArmor; //-1 means none equipped //Item enabled if here
 
 
     //InventoryStorage////////////////////////////////
     public bool AddItem(GameObject item)
     {
+        int newWeight = CurrentWeight + item.GetComponent<ItemMaster>().Weight;
+        if(newWeight > MaxWeight)
+        {
+            Debug.Log("OVER MAX WEIGHT");
+            return false;
+        }
+        CurrentWeight = newWeight;
+
         bool itemAdded = false;
         for(int i = 0; i < InventoryStorage.Length; i++)
         {
             if(InventoryStorage[i] == null)
             {
                 itemAdded = true;
-                InventoryStorage[i] = item;
+                InventoryStorage[i] = Instantiate(item, transform.Find("Storage"));
+                InventoryStorage[i].SetActive(false);
                 break;
             }
         }
@@ -38,12 +51,8 @@ public class Inventory : MonoBehaviour
 
     public void DeleteItem(int location)
     {
+        CurrentWeight -= InventoryStorage[location].GetComponent<ItemMaster>().Weight;
         InventoryStorage[location] = null;
-    }
-
-    public GameObject ReturnSingleItem(int location)
-    {
-        return InventoryStorage[location];
     }
 
     public List<(int, GameObject)> ReturnItems(ItemTypeEnum type)
@@ -55,36 +64,113 @@ public class Inventory : MonoBehaviour
             {
                 if (InventoryStorage[i].GetComponent<ItemMaster>().ItemType == type)
                 {
-                    TempList.Add((i, InventoryStorage[i]));
+                    if (!ItemIsEquppied(i))
+                    {
+                        TempList.Add((i, InventoryStorage[i]));
+                    }
                 }
             }
         }
         return TempList;
     }
+
+    private bool ItemIsEquppied(int i)
+    {
+        if((i == EquippedConsumable) || (i == EquippedArmor) || (i == EquippedWeapons[0]) || (i == EquippedWeapons[1]))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     //InventoryStorage////////////////////////////////
 
 
     //EquipedWeapons//////////////////////////////////
-    public GameObject EquipWeapon(int location, GameObject Weapon)
+    public void EquipWeapon(int storage_location, int equppied_location)
     {
-        GameObject temp = EquipedWeapons[location];
-        EquipedWeapons[location] = Weapon;
+        EquippedWeapons[equppied_location] = storage_location;
         weaponController.RefreshWeapons();
-        return temp;
+    }
+
+    public void UnEquipWeapon(int equppied_location)
+    {
+        EquippedWeapons[equppied_location] = -1;
+        weaponController.RefreshWeapons();
     }
 
     public GameObject ReturnWeapon(int location)
     {
-        return EquipedWeapons[location];
+        if(EquippedWeapons[location] == -1)
+        {
+            return null;
+        }
+        else
+        {
+            return InventoryStorage[EquippedWeapons[location]];
+        }
     }
     //EquipedWeapons//////////////////////////////////
 
-    private void Start() //TESTING ONLY TODO
+
+    //EquipedConsumable//////////////////////////////////
+    public void EquipConsumable(int storage_location)
     {
+        if(EquippedConsumable != -1)
+        {
+            InventoryStorage[EquippedConsumable].SetActive(false);
+        }
+        EquippedConsumable = storage_location;
+        InventoryStorage[EquippedConsumable].SetActive(true);
+    }
+
+    public void UnEquipConsumable()
+    {
+        InventoryStorage[EquippedConsumable].SetActive(false);
+        EquippedConsumable = -1;
+    }
+
+    public GameObject ReturnConsumable()
+    {
+        if(EquippedConsumable == -1)
+        {
+            return null;
+        }
+        else
+        {
+            return InventoryStorage[EquippedConsumable];
+        }
+    }
+
+    public void DisposeConsumable()
+    {
+        InventoryStorage[EquippedConsumable].GetComponent<Consumable>().quantity -= 1;
+        if (InventoryStorage[EquippedConsumable].GetComponent<Consumable>().quantity == 0)
+        {
+            EquippedConsumable = -1;
+        }
+    }
+    //EquipedConsumable//////////////////////////////////
+
+    private void Start() 
+    {
+        CurrentWeight = 0;
+        EquippedWeapons[0] = -1;
+        EquippedWeapons[1] = -1;
+        EquippedConsumable = -1;
+        EquippedArmor = -1;
+
+
         weaponController = GameObject.Find("Player").transform.Find("Body").GetComponent<WeaponController>();
-        AddItem(Axe);
+
+        AddItem(Axe); //TESTING ONLY TODO
         AddItem(Axe);
         AddItem(Axe);
         AddItem(Pistol);
+        AddItem(FirstAid);
+        AddItem(FirstAid);
     }
 }

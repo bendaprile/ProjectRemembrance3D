@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class TimeDilation : Ability
 {
-    [SerializeField] private float energyCost = 40f;
     [SerializeField] private float duration = 4f;
-    [SerializeField] private float cdDelay = 10f;
     [SerializeField] private float ratio = .5f;
 
-    private Energy energy;
+
     private float originalTimeScale;
     private float usable_time;
 
@@ -18,27 +16,17 @@ public class TimeDilation : Ability
 
     void Start()
     {
-        energy = GameObject.Find("Player").GetComponent<Energy>();
-
-        usable_time = 0f;
         dilationActive = false;
         originalTimeScale = Time.timeScale;
     }
 
 
 
-    public override void Attack(float time_dia, float master_counter)
+    protected override void Attack()
     {
-        if (master_counter >= usable_time)
-        {
-            if(energy.drain_energy(energyCost))
-            {
-                dilationActive = true;
-                ending_countdown = duration;
-                usable_time = master_counter + cdDelay;
-                Time.timeScale = ratio * originalTimeScale;
-            }
-        }
+        dilationActive = true;
+        ending_countdown = duration;
+        Time.timeScale = ratio * originalTimeScale;
     }
 
 

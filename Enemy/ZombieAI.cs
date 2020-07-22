@@ -19,9 +19,9 @@ public class ZombieAI : EnemyTemplateMaster
         base.FixedUpdate();
     }
 
-    public override void TakeDamageEnemy(Vector3 Force = new Vector3())
+    public override void EnemyKnockback(Vector3 Force)
     {
-        base.TakeDamageEnemy(Force);
+        base.EnemyKnockback(Force);
         animationUpdater.PlayAnimation("no_attack", false, true);
     }
 

@@ -7,6 +7,7 @@ public class InventoryMenuController : MonoBehaviour
 {
     [SerializeField] Color HubButtonResetColor;
     [SerializeField] private GameObject WeaponUIPrefab_Object;
+    [SerializeField] private GameObject ConsumableUIPrefab_Object;
     [SerializeField]  private GameObject InventoryPanelContent;
 
     private GameObject HubInventoryMenu;
@@ -16,6 +17,7 @@ public class InventoryMenuController : MonoBehaviour
     private GameObject MiscMenu;
 
     private GameObject InventoryPanel;
+    private Text InventoryPanelWildText;
     private GameObject TypeDependentPanel;
 
     private Inventory InventoryScript;
@@ -47,7 +49,8 @@ public class InventoryMenuController : MonoBehaviour
 
         InventoryPanel = GameObject.Find("InventoryPanel");
         TypeDependentPanel = GameObject.Find("TypeDependentPanel");
-        InventoryScript = GameObject.Find("Player").GetComponent<Inventory>();
+        InventoryScript = GameObject.Find("Player").GetComponentInChildren<Inventory>();
+        InventoryPanelWildText = InventoryPanel.transform.Find("InventoryWildField0").GetComponent<Text>();
         SetupLogic();
         Ran_once = true;
     }
@@ -66,6 +69,7 @@ public class InventoryMenuController : MonoBehaviour
         MassDisable();
         last_category = ItemTypeEnum.Consumable;
         ConsumableMenu.SetActive(true);
+        InventoryPanelWildText.text = "##";
         UpdateInventoryPanel();
         HubInventoryMenu.transform.Find("ConsumableButton").GetComponent<Image>().color = Color.red;
     }
@@ -75,6 +79,7 @@ public class InventoryMenuController : MonoBehaviour
         MassDisable();
         last_category = ItemTypeEnum.Armor;
         ArmorMenu.SetActive(true);
+        InventoryPanelWildText.text = "";
         UpdateInventoryPanel();
         HubInventoryMenu.transform.Find("ArmorButton").GetComponent<Image>().color = Color.red;
     }
@@ -84,6 +89,7 @@ public class InventoryMenuController : MonoBehaviour
         MassDisable();
         last_category = ItemTypeEnum.Weapon;
         WeaponsMenu.SetActive(true);
+        InventoryPanelWildText.text = "";
         UpdateInventoryPanel();
         HubInventoryMenu.transform.Find("WeaponButton").GetComponent<Image>().color = Color.red;
     }
@@ -93,6 +99,7 @@ public class InventoryMenuController : MonoBehaviour
         MassDisable();
         last_category = ItemTypeEnum.Misc;
         MiscMenu.SetActive(true);
+        InventoryPanelWildText.text = "";
         UpdateInventoryPanel();
         HubInventoryMenu.transform.Find("MiscButton").GetComponent<Image>().color = Color.red;
     }
@@ -137,10 +144,19 @@ public class InventoryMenuController : MonoBehaviour
         {
             ItemMaster itemProperties = item.Item2.GetComponent<ItemMaster>();
 
-            GameObject UIFab = Instantiate(WeaponUIPrefab_Object);
-            UIFab.transform.SetParent(InventoryPanelContent.transform);
-            UIFab.GetComponent<WeaponUIPrefab>().Setup((Weapon)itemProperties, item.Item1);
+            GameObject UIFab = null;
+            if (type == ItemTypeEnum.Weapon)
+            {
+                UIFab = Instantiate(WeaponUIPrefab_Object);
+                UIFab.GetComponent<WeaponUIPrefab>().Setup((Weapon)itemProperties, item.Item1);
+            }
+            else if(type == ItemTypeEnum.Consumable)
+            {
+                UIFab = Instantiate(ConsumableUIPrefab_Object);
+                UIFab.GetComponent<ConsumableUIPrefab>().Setup((Consumable)itemProperties, item.Item1);
+            }
 
+            UIFab.transform.SetParent(InventoryPanelContent.transform);
         }
     }
 }

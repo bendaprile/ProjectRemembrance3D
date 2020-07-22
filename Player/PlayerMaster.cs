@@ -11,6 +11,7 @@ public class PlayerMaster : MonoBehaviour
     AbilitiesController abilitiesController;
     LightningBoltCast lightningBolt;
     LightningSphereThrow lightningSphere;
+    ConsumableController consumableController;
 
     private UIController UIControl;
 
@@ -23,6 +24,7 @@ public class PlayerMaster : MonoBehaviour
         weaponController = GetComponentInChildren<WeaponController>();
         animationUpdater = GetComponentInChildren<PlayerAnimationUpdater>();
         abilitiesController = GetComponentInChildren<AbilitiesController>();
+        consumableController = GetComponentInChildren<ConsumableController>();
 
         UIControl = GameObject.Find("UI").GetComponent<UIController>();
     }
@@ -33,14 +35,17 @@ public class PlayerMaster : MonoBehaviour
         {
             abilitiesController.HandleAbilities(1f);
 
+            // Item Controller
+            weaponController.HandleWeapon();
+
+            //Consumable Controller
+            consumableController.HandleConsumables();
+
             // Player movement
             playerMovement.UpdatePlayerState();
 
             // Player animation
             animationUpdater.UpdateAnimation();
-
-            // Item Controller
-            weaponController.HandleWeapon();
         }
 
     }

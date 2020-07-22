@@ -9,7 +9,7 @@ public class ItemMaster : MonoBehaviour
     public string ItemName;
     public ItemClass ItemClass;
     public ItemTypeEnum ItemType;
-
+    [SerializeField] public Sprite Item_sprite;
 
 
 

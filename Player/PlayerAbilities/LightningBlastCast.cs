@@ -7,14 +7,10 @@ public class LightningBlastCast : Ability
     [SerializeField] private float range = 10f;
     [SerializeField] private float damage = 1f;
 
-    [SerializeField] private float energyCost = 1f;
-
     private GameObject Lightning;
     private Transform LightningEnd;
 
     public bool activated;
-
-    private Energy energy;
 
     void Start()
     {
@@ -26,7 +22,7 @@ public class LightningBlastCast : Ability
         activated = false;
     }
 
-    public override void Attack(float time_dia, float master_counter)
+    public override void AttemptAttack() //Override this one because the energy is not used up front
     {
         activated = !activated;
         Lightning.SetActive(activated);
@@ -57,8 +53,5 @@ public class LightningBlastCast : Ability
                 }
             }
         }
-
-
-
     }
 }

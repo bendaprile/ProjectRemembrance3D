@@ -8,7 +8,6 @@ public class LightningMelee : Ability
     [SerializeField] float damage = 2.5f;
     [SerializeField] float damage_duration = .2f;
     [SerializeField] float timeout = 10f;
-    [SerializeField] private float energyCost = 100;
 
     [SerializeField] int charge_increment = 7;
     [SerializeField] int max_targets = 3;
@@ -20,7 +19,6 @@ public class LightningMelee : Ability
 
     private int assignment_counter;
 
-    private Energy energy;
     private Transform PlayerProjectiles;
     private float time_keeper;
 
@@ -37,7 +35,6 @@ public class LightningMelee : Ability
         time_keeper = 0f;
         CurrentCharges = 0;
         assignment_counter = 0;
-        energy = GameObject.Find("Player").GetComponent<Energy>();
 
         PlayerProjectiles = GameObject.Find("PlayerProjectiles").transform;
 
@@ -59,16 +56,10 @@ public class LightningMelee : Ability
         }
     }
 
-    public override void Attack(float time_dia, float master_counter)
+    protected override void Attack()
     {
-        if (CurrentCharges == 0)
-        {
-            if (energy.drain_energy(energyCost))
-            {
-                time_keeper = 0f;
-                CurrentCharges = charge_increment;
-            }
-        }
+        time_keeper = 0f;
+        CurrentCharges = charge_increment;
     }
 
 

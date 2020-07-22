@@ -6,20 +6,22 @@ public class WeaponController : MonoBehaviour
 {
     private PlayerMovement playerMovement;
     private Inventory Inventory;
-    
-    private bool currentWeapon;
+    private Transform Storage;
+
+    private int currentWeapon;
     public GameObject ItemParent;
 
     private void Start()
     {
         playerMovement = GetComponentInParent<PlayerMovement>();
-        Inventory = GameObject.Find("Player").GetComponent<Inventory>();
-        currentWeapon = false;
+        Inventory = GameObject.Find("Player").GetComponentInChildren<Inventory>();
+        Storage = GameObject.Find("Storage").transform;
+        currentWeapon = 0;
     }
 
     public void HandleWeapon()
     {
-        EquipWeapon();
+        ReadyWeapon();
         SwitchWeapon();
 
         if (playerMovement.itemEquipped && playerMovement.moveState != PlayerMovement.MoveState.Rolling)
@@ -37,57 +39,69 @@ public class WeaponController : MonoBehaviour
                 Destroy(child.gameObject);
             }
 
-            if(Inventory.ReturnWeapon(BoolToInt(currentWeapon)) != null)
+            if(Inventory.ReturnWeapon(currentWeapon) != null)
             {
                 CleanParenting();
             }
         }
     }
 
-    private void EquipWeapon()
+    private void ReadyWeapon()
     {
-        bool AnyWeaponReady = false;
-        if (Inventory.ReturnWeapon(0))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
-            AnyWeaponReady = true;
-            currentWeapon = false;
-        }
-        else if (Inventory.ReturnWeapon(1))
-        {
-            AnyWeaponReady = true;
-            currentWeapon = true;
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.Z) && AnyWeaponReady)
-        {
-            if (playerMovement.itemEquipped)
+            bool AnyWeaponReady = false;
+            if (Inventory.ReturnWeapon(0))
             {
-                playerMovement.itemEquipped = false;
-                foreach (Transform child in ItemParent.transform)
-                {
-                    Destroy(child.gameObject);
-                }
+                AnyWeaponReady = true;
+                currentWeapon = 0;
             }
-            else
+            else if (Inventory.ReturnWeapon(1))
             {
-                playerMovement.itemEquipped = true;
-                CleanParenting();
+                AnyWeaponReady = true;
+                currentWeapon = 1;
+            }
+
+            if (AnyWeaponReady)
+            {
+                if (playerMovement.itemEquipped)
+                {
+                    playerMovement.itemEquipped = false;
+                    Transform tempObject = ItemParent.transform.GetChild(0);
+                    tempObject.parent = Storage;
+                    tempObject.gameObject.SetActive(false);
+                }
+                else
+                {
+                    playerMovement.itemEquipped = true;
+                    CleanParenting();
+                }
             }
         }
     }
 
     private void SwitchWeapon()
     {
-        if (playerMovement.itemEquipped && Input.GetKeyDown(KeyCode.Q) && Inventory.ReturnWeapon(BoolToInt(!currentWeapon)) != null) //! for the other weapon
+        if (playerMovement.itemEquipped && Input.GetKeyDown(KeyCode.Q))
         {
-            foreach(Transform child in ItemParent.transform)
+            int otherWeapon;
+            if(currentWeapon == 0)
             {
-                Destroy(child.gameObject);
+                otherWeapon = 1;
+            }
+            else
+            {
+                otherWeapon = 0;
             }
 
-            currentWeapon = !currentWeapon;
-            CleanParenting();
+            if (Inventory.ReturnWeapon(otherWeapon) != null)
+            {
+                Transform tempObject = ItemParent.transform.GetChild(0);
+                tempObject.parent = Storage;
+                tempObject.gameObject.SetActive(false);
+                currentWeapon = otherWeapon;
+                CleanParenting();
+            }
         }
     }
 
@@ -112,20 +126,12 @@ public class WeaponController : MonoBehaviour
         ItemParent.GetComponentInChildren<Weapon>().AttackFinished();
     }
 
-    private int BoolToInt(bool input)
-    {
-        if (input)
-        {
-            return 1;
-        }
-        return 0;
-    }
-
     private void CleanParenting() //Takes the global transform values and makes them into local values. This way Items can be placed precisely
     {
-        GameObject TempWeapon = Instantiate(Inventory.ReturnWeapon(BoolToInt(currentWeapon)));
-        Weapon tempWeapon = TempWeapon.GetComponent<Weapon>();
+        GameObject TempWeapon = Inventory.ReturnWeapon(currentWeapon);
+        TempWeapon.SetActive(true);
         TempWeapon.transform.SetParent(ItemParent.transform);
+        Weapon tempWeapon = TempWeapon.GetComponent<Weapon>();
 
         TempWeapon.transform.localEulerAngles = tempWeapon.StartingRotation;
         TempWeapon.transform.localPosition = tempWeapon.StartingLocation;

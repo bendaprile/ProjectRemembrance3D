@@ -15,13 +15,13 @@ public class WeaponUIPrefab : MonoBehaviour
 
     public void Setup(Weapon itemProperties, int storage_loc)
     {
-        inv = GameObject.Find("Player").GetComponent<Inventory>();
+        inv = GameObject.Find("Player").GetComponentInChildren<Inventory>();
         InventoryMenu = GameObject.Find("InventoryMenu").GetComponent<InventoryMenuController>();
         WUIM = GameObject.Find("WeaponsMenu").GetComponent<WeaponsUIMenu>();
         LocalStatsMenu = transform.Find("InventoryItemStatsMenu").gameObject;
         mainTransform = GetComponent<RectTransform>();
 
-        transform.Find("ItemName").GetComponent<Text>().text = itemProperties.name;
+        transform.Find("ItemName").GetComponent<Text>().text = itemProperties.ItemName;
         transform.Find("ItemCost").GetComponent<Text>().text = itemProperties.Cost.ToString();
         transform.Find("ItemWeight").GetComponent<Text>().text = itemProperties.Weight.ToString();
         itemStorageLoc = storage_loc;
@@ -70,16 +70,14 @@ public class WeaponUIPrefab : MonoBehaviour
 
     public void EquipMain()
     {
-        inv.AddItem(inv.EquipWeapon(0, inv.ReturnSingleItem(itemStorageLoc)));
-        inv.DeleteItem(itemStorageLoc);
+        inv.EquipWeapon(itemStorageLoc, 0);
         InventoryMenu.UpdateInventoryPanel();
         WUIM.UpdatePanel();
     }
 
     public void EquipSecondary()
     {
-        inv.AddItem(inv.EquipWeapon(1, inv.ReturnSingleItem(itemStorageLoc)));
-        inv.DeleteItem(itemStorageLoc);
+        inv.EquipWeapon(itemStorageLoc, 1);
         InventoryMenu.UpdateInventoryPanel();
         WUIM.UpdatePanel();
     }
