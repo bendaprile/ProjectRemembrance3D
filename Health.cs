@@ -109,7 +109,8 @@ public class Health : MonoBehaviour
     {
         if (DT == DamageType.Regular || DT == DamageType.Elemental)
         {
-            damage *= (100 / (Armor + 100));
+            float resist = (100f / (Armor + 100f));
+            damage *= resist;
         }
 
         if (DT == DamageType.Regular)
