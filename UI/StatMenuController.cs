@@ -53,9 +53,7 @@ public class StatMenuController : MonoBehaviour
             temp.GetComponent<StatUIPrefab>().Setup(finalValue, AddDeriv, MultDeriv, attributeDesc[i]);
         }
 
-
-
-        SystemStats.Find("LevelPanel").Find("LevelVar").GetComponent<Text>().text = (playerStats.returnLevel()).ToString();
+        SystemStats.Find("LevelPanel").Find("LevelVar").GetComponent<Text>().text = playerStats.returnLevel().ToString();
     }
 
     private void setupDescArrays()

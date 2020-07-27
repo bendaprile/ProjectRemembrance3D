@@ -13,8 +13,8 @@ public class BuildingController : MonoBehaviour
 
     private void Start()
     {
-        lights.SetActive(false);
-        roof.SetActive(true);
+        if (lights) { lights.SetActive(false); }
+        if (roof) { roof.SetActive(true); }
     }
 
     private void OnTriggerExit(Collider other)
