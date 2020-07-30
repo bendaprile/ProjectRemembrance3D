@@ -88,6 +88,7 @@ public class SlidingDoorController : MonoBehaviour
         }
     }
 
+    // TODO: Handle Input through InputManager and not direct key references
     private void OnTriggerStay(Collider other)
     {
         if (automaticDoor) { return; }

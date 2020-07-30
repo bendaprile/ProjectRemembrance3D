@@ -27,7 +27,7 @@ public class InteractiveBox : InteractiveObject
         playerStats = player.GetComponent<PlayerStats>();
     }
 
-
+    // TODO: Handle Input through InputManager and not direct key references
     private void Update()
     {
         if(isCursorOverhead && PIR.isTrue)

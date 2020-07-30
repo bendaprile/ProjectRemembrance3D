@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -73,6 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (itemEquipped)
         {
+            // TODO: Handle for controllers
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitray;
 
@@ -135,6 +135,7 @@ public class PlayerMovement : MonoBehaviour
             moveState = MoveState.Idle;
         }
 
+        // TODO: Handle for controllers
         float controlThrowX = Mathf.Abs(Input.GetAxis("Horizontal"));
         float controlThrowY = Mathf.Abs(Input.GetAxis("Vertical"));
 

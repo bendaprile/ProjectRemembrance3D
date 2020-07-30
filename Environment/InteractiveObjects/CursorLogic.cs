@@ -18,6 +18,7 @@ public class CursorLogic : MonoBehaviour
         InteractiveObjectFunction();
     }
 
+    // TODO: Handle for controllers
     private void InteractiveObjectFunction()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -51,6 +52,7 @@ public class CursorLogic : MonoBehaviour
         }
     }
 
+    // TODO: Handle for controllers
     public Vector3 GetPosition()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

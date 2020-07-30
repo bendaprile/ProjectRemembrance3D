@@ -48,7 +48,7 @@ public class PlayerAnimationUpdater : MonoBehaviour
         if (CanUpdateAnimation())
         {
             UpdateMoveAnimation();
-            DanceAnimation();
+            // Could put other animations like dance or pray here
         }
     }
 
@@ -151,15 +151,6 @@ public class PlayerAnimationUpdater : MonoBehaviour
         else
         {
             PlayAnimation("roll_f");
-        }
-    }
-
-    void DanceAnimation()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            dancing = true;
-            PlayAnimation("dance");
         }
     }
 

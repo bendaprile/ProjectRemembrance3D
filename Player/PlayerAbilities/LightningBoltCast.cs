@@ -18,6 +18,7 @@ public class LightningBoltCast : Ability
         LBP.enemy_strike = false;
     }
 
+    // TODO: Handle for controllers
     private Vector3 SetPos()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

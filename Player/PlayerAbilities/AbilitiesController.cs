@@ -42,7 +42,7 @@ public class AbilitiesController : MonoBehaviour
         }
     }
 
-
+    // TODO: Handle Input through InputManager and not direct key references
     public void HandleAbilities(float time_dia)
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && abilities.Count > 0)

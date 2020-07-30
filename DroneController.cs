@@ -60,7 +60,7 @@ public class DroneController : MonoBehaviour
         transform.position = dronePos;
     }
 
-
+    // TODO: Handle Input through InputManager and not direct key references
     void ControlFlashlight()
     {
         if (Input.GetKeyDown(KeyCode.F))

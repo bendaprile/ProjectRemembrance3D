@@ -46,6 +46,7 @@ public class WeaponController : MonoBehaviour
         }
     }
 
+    // TODO: Handle input with input manager and not direct key references
     private void ReadyWeapon()
     {
         if (Input.GetKeyDown(KeyCode.Z))
@@ -80,6 +81,7 @@ public class WeaponController : MonoBehaviour
         }
     }
 
+    // TODO: Handle input with input manager and not direct key references
     private void SwitchWeapon()
     {
         if (playerMovement.itemEquipped && Input.GetKeyDown(KeyCode.Q))
@@ -105,6 +107,7 @@ public class WeaponController : MonoBehaviour
         }
     }
 
+    // TODO: Handle input with input manager and not direct key references
     private void Attack()
     {
         if (Input.GetMouseButtonDown(0))

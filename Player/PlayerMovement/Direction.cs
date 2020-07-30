@@ -24,6 +24,7 @@ public class Direction : MonoBehaviour
 
     /*
      * Returns the angle of the mouse from -180 to 180
+     * TODO: Handle for controllers
      */
     public void CalculateMouseDirection()
     {
@@ -37,6 +38,7 @@ public class Direction : MonoBehaviour
         mouseAngle = angle;
     }
 
+    // TODO: Handle for controllers
     public void CalculateMovingDirection()
     {
         Vector2 direction = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));

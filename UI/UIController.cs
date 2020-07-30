@@ -27,7 +27,7 @@ public class UIController : MonoBehaviour
     {
         GamePaused = !HUD.activeSelf;
 
-
+        // TODO: Handle Input through InputManager and not direct key references
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (ExternalMenuOpen)
@@ -50,6 +50,7 @@ public class UIController : MonoBehaviour
             }
         }
 
+        // TODO: Handle Input through InputManager and not direct key references
         if (!ExternalMenuOpen && Input.GetKeyDown(KeyCode.Tab))
         {
             if (Menu.activeSelf)

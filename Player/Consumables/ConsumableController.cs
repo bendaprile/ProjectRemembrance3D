@@ -44,6 +44,7 @@ public class ConsumableController : MonoBehaviour
         }
     }
 
+    // TODO: Handle Input through InputManager and not direct key references
     public void HandleConsumables()
     {
         if (Input.GetKeyDown(KeyCode.BackQuote))
