@@ -8,6 +8,8 @@ public class PlayerStats : MonoBehaviour
     private GameObject Player;
     private Health PlayerHealth;
     private Energy PlayerEnergy;
+    private CombatChecker combatChecker;
+    private UIController uIController;
 
     //////////////////////////////////////
     private int level;
@@ -16,10 +18,6 @@ public class PlayerStats : MonoBehaviour
     public void AddEXP(int exp_in)
     {
         current_exp += exp_in;
-        if(current_exp > level * 1000)
-        {
-            LevelUp();
-        }
     }
 
     public int returnEXP()
@@ -39,9 +37,13 @@ public class PlayerStats : MonoBehaviour
 
     private void LevelUp()
     {
-        current_exp -= level * 1000;
-        level += 1;
-        UpdateBaseAttributes();
+        if ((current_exp > level * 1000) && !combatChecker.enemies_nearby)
+        {  
+            current_exp -= level * 1000;
+            level += 1;
+            UpdateBaseAttributes();
+            uIController.LevelUpMenuBool(true);
+        }
     }
 
     //////////////////////////////////////
@@ -58,14 +60,17 @@ public class PlayerStats : MonoBehaviour
         UpdateBaseAttributes();
         UpdateDerivedStats();
     }
+
     public int ReturnCoreIntrinsicSkill(CoreIntrinsicSkillsEnum CoreIntrinsicSkill)
     {
         return CoreStatsStorage[(int)CoreIntrinsicSkill];
     }
+
     public int ReturnDerivedIntrinsicSkill(DerivedIntrinsicSkillsEnum DerivedIntrinsicSkill)
     {
         return DerivedStatsStorage[(int)DerivedIntrinsicSkill];
     }
+
     private void UpdateDerivedStats()
     {
         DerivedStatsStorage[(int)DerivedIntrinsicSkillsEnum.Vigor] = CoreStatsStorage[(int)CoreIntrinsicSkillsEnum.Strength] + CoreStatsStorage[(int)CoreIntrinsicSkillsEnum.Dexterity];
@@ -236,6 +241,9 @@ public class PlayerStats : MonoBehaviour
         Player = GameObject.Find("Player");
         PlayerHealth = Player.transform.GetComponent<Health>();
         PlayerEnergy = Player.transform.GetComponent<Energy>();
+        combatChecker = Player.transform.GetComponentInChildren<CombatChecker>();
+        uIController = GameObject.Find("UI").GetComponent<UIController>();
+
         for (int i = 0; i < STARTUP_DECLARATIONS.Number_of_Attributes; i++)
         {
             AttributesAdditiveEffects[i] = new List<(string, float)>();
@@ -260,12 +268,12 @@ public class PlayerStats : MonoBehaviour
         /////////////////////////////////////
 
 
-        AddEXP(1500);
+        AddEXP(800);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        
+        LevelUp();
     }
 }

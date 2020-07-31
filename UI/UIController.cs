@@ -9,15 +9,18 @@ public class UIController : MonoBehaviour
     public GameObject HUD;
     public GameObject Map;
     public GameObject InteractiveObjectMenu;
+    public GameObject LevelUpMenu;
 
     public bool GamePaused;
 
+    private bool inescapableExternalMenu;
     private bool ExternalMenuOpen;
     private float originalTimeScale;
 
     // Start is called before the first frame update
     void Start()
     {
+        inescapableExternalMenu = false;
         ExternalMenuOpen = false;
         originalTimeScale = Time.timeScale;
     }
@@ -30,7 +33,11 @@ public class UIController : MonoBehaviour
         // TODO: Handle Input through InputManager and not direct key references
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (ExternalMenuOpen)
+            if(inescapableExternalMenu)
+            {
+                //Do Nothing
+            }
+            else if (ExternalMenuOpen)
             {
                 ExternalMenuOpen = false;
                 InteractiveObjectMenu.SetActive(false);
@@ -51,7 +58,7 @@ public class UIController : MonoBehaviour
         }
 
         // TODO: Handle Input through InputManager and not direct key references
-        if (!ExternalMenuOpen && Input.GetKeyDown(KeyCode.Tab))
+        if (!inescapableExternalMenu && !ExternalMenuOpen && Input.GetKeyDown(KeyCode.Tab))
         {
             if (Menu.activeSelf)
             {
@@ -71,6 +78,24 @@ public class UIController : MonoBehaviour
         ExternalMenuOpen = true;
         InteractiveObjectMenu.SetActive(true);
         InteractiveObjectMenu.GetComponent<InteractiveObjectMenuUI>().Refresh(container);
+    }
+
+    public void LevelUpMenuBool(bool open)
+    {
+        if(open)
+        {
+            Debug.Log("Here");
+            Paused();
+            Map.SetActive(false);
+            inescapableExternalMenu = true;
+            LevelUpMenu.SetActive(true);
+        }
+        else
+        {
+            Unpaused();
+            inescapableExternalMenu = false;
+            LevelUpMenu.SetActive(false);
+        }
     }
 
     void Paused()
