@@ -62,7 +62,7 @@ public class UIController : MonoBehaviour
         {
             if (Menu.activeSelf)
             {
-                Menu.GetComponent<MenuController>().MapEnable();                
+                Menu.GetComponent<MenuController>().WorldEnable();                
             }
             else
             {
@@ -84,7 +84,6 @@ public class UIController : MonoBehaviour
     {
         if(open)
         {
-            Debug.Log("Here");
             Paused();
             Map.SetActive(false);
             inescapableExternalMenu = true;

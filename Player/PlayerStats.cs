@@ -35,6 +35,11 @@ public class PlayerStats : MonoBehaviour
         return (current_exp / (level * 1000));
     }
 
+    public int returnFreeSkillPoints()
+    {
+        return (5 + ReturnDerivedIntrinsicSkill(DerivedIntrinsicSkillsEnum.Cerebral) / 4);
+    }
+
     private void LevelUp()
     {
         if ((current_exp > level * 1000) && !combatChecker.enemies_nearby)
@@ -265,10 +270,8 @@ public class PlayerStats : MonoBehaviour
         AddAttributeEffect(AttributesEnum.max_health, "TEST", true, 50);
         AddAttributeEffect(AttributesEnum.armor, "TEST Armor", true, 10);
         AddAttributeEffect(AttributesEnum.plating, "TEST Plating", true, 5);
-        /////////////////////////////////////
-
-
-        AddEXP(800);
+        ////////////////////////////////////
+        AddEXP(975);
     }
 
     // Update is called once per frame

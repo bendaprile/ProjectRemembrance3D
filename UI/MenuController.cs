@@ -9,6 +9,7 @@ public class MenuController : MonoBehaviour
     [SerializeField] Color HubButtonResetColor;
     private GameObject HubMenu;
 
+    private GameObject WorldMenu;
     private GameObject InventoryMenu;
     private GameObject StatsMenu;
     private GameObject SkillMenu;
@@ -27,6 +28,7 @@ public class MenuController : MonoBehaviour
         HubMenu = transform.Find("HubMenu").gameObject;
         SkillMenu = transform.Find("Panel").Find("SkillMenu").gameObject;
         StatsMenu = transform.Find("Panel").Find("StatsMenu").gameObject;
+        WorldMenu = transform.Find("Panel").Find("WorldMenu").gameObject;
         InventoryMenu = transform.Find("Panel").Find("InventoryMenu").gameObject;
         AbilitiesMenu = transform.Find("Panel").Find("AbilitiesMenu").gameObject;
 
@@ -43,7 +45,7 @@ public class MenuController : MonoBehaviour
         if (Map.activeSelf) //This brings the map in front of the image
         {
             MassDisable();
-            MapEnable();
+            WorldEnable();
         }
         else
         {
@@ -80,11 +82,12 @@ public class MenuController : MonoBehaviour
         HubMenu.transform.Find("StatsButton").GetComponent<Image>().color = Color.red;
     }
 
-    public void MapEnable()
+    public void WorldEnable()
     {
         MassDisable();
+        WorldMenu.SetActive(true);
+        HubMenu.transform.Find("WorldButton").GetComponent<Image>().color = Color.red;
         Map.SetActive(true);
-        HubMenu.transform.Find("MapButton").GetComponent<Image>().color = Color.red;
     }
 
     public void AbilitiesEnable()
@@ -105,6 +108,7 @@ public class MenuController : MonoBehaviour
     {
         SkillMenu.SetActive(false);
         StatsMenu.SetActive(false);
+        WorldMenu.SetActive(false);
         Map.SetActive(false);
         InventoryMenu.SetActive(false);
         ResetColors();

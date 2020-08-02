@@ -11,6 +11,7 @@ public class ZombieAI : EnemyTemplateMaster
     protected override void Start()
     {
         base.Start();
+        exp_reward = 50;
         zombieAttack = GetComponentInChildren<ZombieAttack>();
     }
 

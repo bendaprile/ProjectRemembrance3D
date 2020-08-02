@@ -19,7 +19,7 @@ public class InteractiveObjectMenuUI : MonoBehaviour
     {
         StatsPanel = transform.Find("StatsPanel").gameObject;
         Panel = transform.Find("Panel").gameObject;
-        inv = GameObject.Find("Player").GetComponent<Inventory>();
+        inv = GameObject.Find("Player").GetComponentInChildren<Inventory>();
         SelectedStats = StatsPanel.transform.Find("SelectedStats");
         PreviousContainer = null;
     }

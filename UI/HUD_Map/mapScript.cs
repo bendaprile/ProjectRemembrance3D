@@ -17,7 +17,7 @@ public class mapScript : MonoBehaviour
     void Start()
     {
         playerLoc = GameObject.Find("Player").transform;
-        playerIconUI = transform.Find("PlayerLocation").GetComponent<RectTransform>();
+        playerIconUI = transform.Find("FullMapHolder").Find("PlayerLocation").GetComponent<RectTransform>();
 
         length = Worldmapsize / 2;
 

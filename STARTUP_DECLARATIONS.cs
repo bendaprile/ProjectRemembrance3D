@@ -26,6 +26,8 @@ public enum ConsumableType { Restoring }
 
 public enum ItemClass { D, C, B, A, S }
 
+public enum QuestType { Fetch }
+
 public static class STARTUP_DECLARATIONS
 {
     public const int Number_of_Attributes = 8;

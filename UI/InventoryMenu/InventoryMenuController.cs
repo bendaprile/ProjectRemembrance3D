@@ -24,22 +24,27 @@ public class InventoryMenuController : MonoBehaviour
 
     private ItemTypeEnum last_category;
 
-    private bool Ran_once;
+    private bool First_run;
 
     private void Awake()
     {
-        Ran_once = false;
+        First_run = true;
     }
 
     private void OnEnable()
     {
-        if (Ran_once)
+        if (First_run)
         {
-            SetupLogic();
+            first_run_func();
         }
+
+        last_category = ItemTypeEnum.Misc;
+        InventoryPanelWildText.text = "";
+        DestoryInventoryPanel();
+        MassDisable();
     }
 
-    private void Start()
+    private void first_run_func()
     {
         HubInventoryMenu = GameObject.Find("HubInventoryMenu");
         ConsumableMenu = GameObject.Find("ConsumableMenu");
@@ -51,17 +56,8 @@ public class InventoryMenuController : MonoBehaviour
         TypeDependentPanel = GameObject.Find("TypeDependentPanel");
         InventoryScript = GameObject.Find("Player").GetComponentInChildren<Inventory>();
         InventoryPanelWildText = InventoryPanel.transform.Find("InventoryWildField0").GetComponent<Text>();
-        SetupLogic();
-        Ran_once = true;
+        First_run = false;
     }
-
-    private void SetupLogic()
-    {
-        last_category = ItemTypeEnum.Misc;
-        DestoryInventoryPanel();
-        MassDisable();
-    }
-
 
 
     public void ConsumableEnable()

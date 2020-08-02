@@ -30,7 +30,7 @@ public class EnemyTemplateMaster : MonoBehaviour
     protected float roam_time_tracker = 0;
     // Roam logic
 
-
+    protected int exp_reward;
     protected bool cc_immune;
     protected float StunRelease;
     protected float timer;
@@ -84,6 +84,8 @@ public class EnemyTemplateMaster : MonoBehaviour
 
     public virtual void Death()
     {
+        player.GetComponent<PlayerStats>().AddEXP(exp_reward);
+
         // Freeze the position and remove collision of the enemy
         rB.constraints = RigidbodyConstraints.FreezeAll;
         rB.angularVelocity = Vector3.zero;
