@@ -9,16 +9,16 @@ public class CameraEnvironmentController : MonoBehaviour
     public Transform cameraTransform;
     public CinemachineVirtualCamera virtualCamera;
     public Light sun;
+    [SerializeField] Light moon;
     public float increaseCameraX = 15f;
     public float zoomFactor = 20f;
     public float outdoorBrightness = 1500f;
     public float delay = 4f;
 
-
-
     private float inital_x;
     private float x_axis;
     private float decreaseSunIntensity;
+    private float decreaseMoonIntensity;
 
     private void Start()
     {
@@ -26,6 +26,7 @@ public class CameraEnvironmentController : MonoBehaviour
         x_axis = inital_x;
 
         decreaseSunIntensity = sun.intensity - outdoorBrightness;
+        decreaseMoonIntensity = moon.intensity - outdoorBrightness;
     }
 
     public IEnumerator EnterBuilding()
@@ -35,6 +36,7 @@ public class CameraEnvironmentController : MonoBehaviour
         {
 
             sun.intensity -= decreaseSunIntensity * Time.deltaTime / delay;
+            moon.intensity -= decreaseMoonIntensity * Time.deltaTime / delay;
 
             //sun.intensity = Mathf.Lerp(sun.intensity, outdoorBrightness, Time.deltaTime);
 
@@ -55,6 +57,7 @@ public class CameraEnvironmentController : MonoBehaviour
         for (float i = 0; i < delay; i += Time.deltaTime)
         {
             sun.intensity += decreaseSunIntensity * Time.deltaTime / delay;
+            moon.intensity += decreaseMoonIntensity * Time.deltaTime / delay;
 
             x_axis -= increaseCameraX * Time.deltaTime / (delay);
             virtualCamera.m_Lens.FieldOfView += zoomFactor * Time.deltaTime / (delay);
