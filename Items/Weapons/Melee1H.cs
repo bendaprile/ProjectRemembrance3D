@@ -63,14 +63,18 @@ public class Melee1H : Weapon
 
     public override void Attack()
     {
-        if (!attacking && energy.drain_energy(energyCost))
+        if (!attacking)
         {
-            playerMovement.StopMovement();
-            playerMovement.moveState = PlayerMovement.MoveState.Melee;
-            playerMovement.AddForwardForce(selfForce);
+            if (energy.drain_energy(energyCost)) //Like this because this uses energy
+            {
+                playerMovement.StopMovement();
+                playerMovement.SetMeleeState();
+                playerMovement.AddForwardForce(selfForce);
 
-            attacking = true;
-            animationUpdater.PlayAnimation(animNames[attackAnimIndex], true);
+                attacking = true;
+                animationUpdater.PlayAnimation(animNames[attackAnimIndex], true);
+            }
+
         }
     }
 

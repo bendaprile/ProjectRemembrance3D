@@ -24,7 +24,7 @@ public class WeaponController : MonoBehaviour
         ReadyWeapon();
         SwitchWeapon();
 
-        if (playerMovement.itemEquipped && playerMovement.moveState != PlayerMovement.MoveState.Rolling)
+        if (playerMovement.itemEquipped && playerMovement.GetMoveState() != MoveState.Rolling)
         {
             Attack();
         }

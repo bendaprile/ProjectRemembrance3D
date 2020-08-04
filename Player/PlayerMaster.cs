@@ -53,10 +53,10 @@ public class PlayerMaster : MonoBehaviour
     private void FixedUpdate()
     {
 
-        if (playerMovement.moveState != PlayerMovement.MoveState.Melee)
+        if (playerMovement.GetMoveState() != MoveState.Melee)
         {
             playerMovement.Move();
-            animationUpdater.UpdatePlayerDirection();
         }
+        animationUpdater.UpdatePlayerDirection();
     }
 }

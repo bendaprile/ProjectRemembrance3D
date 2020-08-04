@@ -9,7 +9,6 @@ public class PlayerAnimationUpdater : MonoBehaviour
     [SerializeField] float transitionFade = 0.25f;
     string currentAnim = "idle";
     MoveDir moveDirection;
-    bool dancing = false;
 
     // Stored references
     Animator animator;
@@ -34,11 +33,18 @@ public class PlayerAnimationUpdater : MonoBehaviour
 
         float yRotation = direction.AngleToDirection();
 
-        if(playerMovement.moveState != PlayerMovement.MoveState.Idle && playerMovement.moveState != PlayerMovement.MoveState.Melee)
+        if(playerMovement.GetMoveState() == MoveState.Idle)
+        {
+            gameObject.transform.localRotation = Quaternion.RotateTowards(gameObject.transform.localRotation, Quaternion.Euler(new Vector3(0, 0, 0)), 90 * Time.fixedDeltaTime);
+        }
+        else if(playerMovement.GetMoveState() == MoveState.Melee)
+        {
+            gameObject.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
+        }
+        else
         {
             gameObject.transform.rotation = Quaternion.RotateTowards(gameObject.transform.rotation, Quaternion.Euler(new Vector3(0, yRotation, 0)), 90 * Time.fixedDeltaTime);
         }
-
     }
 
     public void UpdateAnimation()
@@ -59,8 +65,7 @@ public class PlayerAnimationUpdater : MonoBehaviour
 
         if (controlThrowX > 0 || controlThrowY > 0)
         {
-            dancing = false;
-            if (playerMovement.moveState == PlayerMovement.MoveState.Running)
+            if (playerMovement.GetMoveState() == MoveState.Running)
             {
                 UpdateRunAnimation();
             }
@@ -69,7 +74,7 @@ public class PlayerAnimationUpdater : MonoBehaviour
                 UpdateWalkAnimation();
             }
         }
-        else if (dancing == false)
+        else
         {
             PlayAnimation("idle");
         }
@@ -191,7 +196,6 @@ public class PlayerAnimationUpdater : MonoBehaviour
 
     bool CanUpdateAnimation()
     {
-        return !(playerMovement.moveState == PlayerMovement.MoveState.Rolling)
-            && !(playerMovement.moveState == PlayerMovement.MoveState.Melee);
+        return !(playerMovement.GetMoveState() == MoveState.Rolling) && !(playerMovement.GetMoveState() == MoveState.Melee);
     }
 }

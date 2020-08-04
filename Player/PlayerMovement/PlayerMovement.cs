@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float sprintEnergyCost = 0.2f;
 
     private Vector3 heading, forward, side, force;
-    public MoveState moveState = MoveState.Idle;
+    private MoveState moveState = MoveState.Idle;
 
     private Rigidbody rb;
     private PlayerAnimationUpdater animationUpdater;
@@ -26,14 +26,7 @@ public class PlayerMovement : MonoBehaviour
     public bool itemEquipped;
     public bool postAnimation = false;
 
-    public enum MoveState
-    {
-        Idle,
-        Walking,
-        Running,
-        Rolling,
-        Melee
-    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -174,5 +167,15 @@ public class PlayerMovement : MonoBehaviour
     public void AddForwardForce(float force)
     {
         rb.AddForce(transform.forward * force);
+    }
+
+    public void SetMeleeState()
+    {
+        moveState = MoveState.Melee;
+    }
+
+    public MoveState GetMoveState()
+    {
+        return moveState;
     }
 }

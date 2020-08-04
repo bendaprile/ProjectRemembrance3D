@@ -14,6 +14,7 @@ public class Inventory : MonoBehaviour
 
 
     private WeaponController weaponController;
+    private QuestsHolder questsHolder;
 
 
     private GameObject[] InventoryStorage = new GameObject[1000];
@@ -46,6 +47,7 @@ public class Inventory : MonoBehaviour
                 break;
             }
         }
+        questsHolder.CheckFetchObjectives(item, true);
         return itemAdded;
     }
 
@@ -53,6 +55,7 @@ public class Inventory : MonoBehaviour
     {
         CurrentWeight -= InventoryStorage[location].GetComponent<ItemMaster>().Weight;
         InventoryStorage[location] = null;
+        questsHolder.CheckFetchObjectives(InventoryStorage[location], false);
     }
 
     public List<(int, GameObject)> ReturnItems(ItemTypeEnum type)
@@ -165,6 +168,7 @@ public class Inventory : MonoBehaviour
 
 
         weaponController = GameObject.Find("Player").transform.Find("Body").GetComponent<WeaponController>();
+        questsHolder = GameObject.Find("Player").transform.Find("QuestsHolder").GetComponent<QuestsHolder>();
 
         AddItem(Axe); //TESTING ONLY TODO
         AddItem(Axe);
