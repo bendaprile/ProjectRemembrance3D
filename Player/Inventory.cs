@@ -44,18 +44,19 @@ public class Inventory : MonoBehaviour
                 itemAdded = true;
                 InventoryStorage[i] = Instantiate(item, transform.Find("Storage"));
                 InventoryStorage[i].SetActive(false);
+                questsHolder.CheckFetchObjectives(item, true, i);
                 break;
             }
         }
-        questsHolder.CheckFetchObjectives(item, true);
+ 
         return itemAdded;
     }
 
     public void DeleteItem(int location)
     {
         CurrentWeight -= InventoryStorage[location].GetComponent<ItemMaster>().Weight;
+        questsHolder.CheckFetchObjectives(InventoryStorage[location], false, location);
         InventoryStorage[location] = null;
-        questsHolder.CheckFetchObjectives(InventoryStorage[location], false);
     }
 
     public List<(int, GameObject)> ReturnItems(ItemTypeEnum type)

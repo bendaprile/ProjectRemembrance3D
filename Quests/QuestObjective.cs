@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class QuestObjective : MonoBehaviour
 {
-    [SerializeField] protected string Description;
     protected QuestTemplate questTemplate;
 
     public virtual void initialize()
@@ -12,9 +11,9 @@ public class QuestObjective : MonoBehaviour
         questTemplate = GetComponentInParent<QuestTemplate>();
     }
 
-    public virtual string ReturnDescription()
+    public virtual List<(bool, string)> ReturnTasks()
     {
-        return "";
+        return new List<(bool, string)>();
     }
 
     public virtual ObjectiveType ReturnType()

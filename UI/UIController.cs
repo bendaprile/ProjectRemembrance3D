@@ -10,6 +10,7 @@ public class UIController : MonoBehaviour
     public GameObject Map;
     public GameObject InteractiveObjectMenu;
     public GameObject LevelUpMenu;
+    public GameObject DialogueMenu;
 
     public bool GamePaused;
 
@@ -94,6 +95,24 @@ public class UIController : MonoBehaviour
             Unpaused();
             inescapableExternalMenu = false;
             LevelUpMenu.SetActive(false);
+        }
+    }
+
+    public void DialogueMenuBool(Transform DiaData = null, string startingLine = "")
+    {
+        if (DiaData != null)
+        {
+            Paused();
+            Map.SetActive(false);
+            inescapableExternalMenu = true;
+            DialogueMenu.SetActive(true);
+            DialogueMenu.GetComponent<DiaParent>().SetupDia(DiaData, startingLine);
+        }
+        else
+        {
+            Unpaused();
+            inescapableExternalMenu = false;
+            DialogueMenu.SetActive(false);
         }
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class QuestTemplate : MonoBehaviour
 {
     [SerializeField] public string QuestName; //MUST BE UNIQUE
-    [SerializeField] public int xp_reward; //MUST BE UNIQUE
+    [SerializeField] public int xp_reward;
 
     private List<GameObject> HiddenObjectiveList = new List<GameObject>();
     private GameObject ActiveObjective;

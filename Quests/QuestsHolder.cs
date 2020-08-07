@@ -10,19 +10,15 @@ public class QuestsHolder : MonoBehaviour
 
     private PlayerStats playerStats;
 
-    public GameObject TestQuest;
+
     void Start()
     {
-        //Testing only //NOTE if the quest is complete before the game starts it will not work properly. This is because the items in the inventory are not initialized yet.
-        Transform tempPrefab = Instantiate(TestQuest.transform, transform);
-        AddQuest(tempPrefab);
-        //Testing only
-
         playerStats = GameObject.Find("Player").GetComponent<PlayerStats>();
     }
 
     public void AddQuest(Transform Quest)
     {
+        Quest.parent = transform;
         ActiveQuests.Add(Quest.gameObject);
         Quest.GetComponent<QuestTemplate>().QuestStart();
     }
@@ -49,7 +45,7 @@ public class QuestsHolder : MonoBehaviour
         }
     }
 
-    public void CheckFetchObjectives(GameObject item, bool itemAdd)
+    public void CheckFetchObjectives(GameObject item, bool itemAdd, int location)
     {
         ItemMaster itemStats = item.GetComponent<ItemMaster>();
 
@@ -58,7 +54,7 @@ public class QuestsHolder : MonoBehaviour
             QuestObjective TempActiveObj = ActiveQuests[i].GetComponent<QuestTemplate>().returnActiveObjective();
             if (TempActiveObj.ReturnType() == ObjectiveType.Fetch)
             {
-                ((FetchObjective)TempActiveObj).UpdateItemCount(itemStats, itemAdd);
+                ((FetchObjective)TempActiveObj).UpdateItemCount(itemStats, itemAdd, location);
             }
         }
     }

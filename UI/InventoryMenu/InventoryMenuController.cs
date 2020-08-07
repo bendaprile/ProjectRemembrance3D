@@ -15,6 +15,7 @@ public class InventoryMenuController : MonoBehaviour
     private GameObject ArmorMenu;
     private GameObject WeaponsMenu;
     private GameObject MiscMenu;
+    private GameObject QuestItemMenu;
 
     private GameObject InventoryPanel;
     private Text InventoryPanelWildText;
@@ -51,6 +52,7 @@ public class InventoryMenuController : MonoBehaviour
         ArmorMenu = GameObject.Find("ArmorMenu");
         WeaponsMenu = GameObject.Find("WeaponsMenu");
         MiscMenu = GameObject.Find("MiscMenu");
+        QuestItemMenu = GameObject.Find("QuestItemMenu");
 
         InventoryPanel = GameObject.Find("InventoryPanel");
         TypeDependentPanel = GameObject.Find("TypeDependentPanel");
@@ -98,6 +100,16 @@ public class InventoryMenuController : MonoBehaviour
         InventoryPanelWildText.text = "";
         UpdateInventoryPanel();
         HubInventoryMenu.transform.Find("MiscButton").GetComponent<Image>().color = Color.red;
+    }
+
+    public void QuestItemEnable()
+    {
+        MassDisable();
+        last_category = ItemTypeEnum.QuestItem;
+        QuestItemMenu.SetActive(true);
+        InventoryPanelWildText.text = "";
+        UpdateInventoryPanel();
+        HubInventoryMenu.transform.Find("QuestItemButton").GetComponent<Image>().color = Color.red;
     }
 
     private void MassDisable()

@@ -2,29 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FetchObjective : QuestObjective
+public class FetchObjective : QuestObjective //WILL BREAK IF ITEM IS EQUIPPED
 {
-    [SerializeField] private GameObject itemNeeded;
-    private ItemMaster itemNeededSpecs;
+    [SerializeField] private List<GameObject> itemNeeded = new List<GameObject>();
+    [SerializeField] private List<int> itemsRequired = new List<int>();
+    [SerializeField] private List<string> Descripions = new List<string>();
+    private List<ItemMaster> itemNeededSpecs = new List<ItemMaster>();
 
-    [SerializeField] private int itemsRequired;
-    private int currentItems;
+    private List<int> currentItems = new List<int>();
+    private List<int> itemLocs = new List<int>();
 
     public override void initialize()
     {
         base.initialize();
 
-        currentItems = 0;
-        itemNeededSpecs = itemNeeded.GetComponent<ItemMaster>();
-
-        List<(int, GameObject)> temp = GameObject.Find("Inventory").GetComponent<Inventory>().ReturnItems(itemNeededSpecs.ItemType);
-
-        foreach((int, GameObject) iter in temp)
+        for(int i = 0; i < itemNeeded.Count; i++)
         {
-            if(iter.Item2.GetComponent<ItemMaster>().ItemName == itemNeededSpecs.ItemName)
+            currentItems.Add(0);
+            itemNeededSpecs.Add(itemNeeded[i].GetComponent<ItemMaster>());
+
+            List<(int, GameObject)> temp = GameObject.Find("Inventory").GetComponent<Inventory>().ReturnItems(itemNeededSpecs[i].ItemType);
+
+            foreach ((int, GameObject) iter in temp)
             {
-                currentItems += 1;
+                if (iter.Item2.GetComponent<ItemMaster>().ItemName == itemNeededSpecs[i].ItemName)
+                {
+                    currentItems[i] += 1;
+                }
             }
+
         }
 
         CheckStatus();
@@ -32,30 +38,54 @@ public class FetchObjective : QuestObjective
 
     protected override void CheckStatus()
     {
-        if(currentItems >= itemsRequired)
+        bool objFinished = true;
+        for(int i = 0; i < itemNeeded.Count; i++)
+        {
+            if (currentItems[i] < itemsRequired[i])
+            {
+                objFinished = false;
+            }
+        }
+
+        if(objFinished)
         {
             questTemplate.ObjectiveFinished();
         }
     }
 
-    public void UpdateItemCount(ItemMaster itemStats, bool itemAdd)
+    public void UpdateItemCount(ItemMaster itemStats, bool itemAdd, int location)
     {
-        if (itemStats.ItemName == itemNeededSpecs.ItemName)
-            if (itemAdd)
+        for (int i = 0; i < itemNeeded.Count; i++)
+        {
+            if (itemStats.ItemName == itemNeededSpecs[i].ItemName)
             {
-                currentItems += 1;
+                if (itemAdd)
+                {
+                    currentItems[i] += 1;
+                    itemLocs.Add(location);
+                }
+                else
+                {
+                    currentItems[i] -= 1;
+                    itemLocs.Remove(location); //Removes this particular item storage loc, not the list loc
+                }
             }
-            else
-            {
-                currentItems -= 1;
-            }
+        }
+
         CheckStatus();
     }
 
-    public override string ReturnDescription()
+    public override List<(bool, string)> ReturnTasks()
     {
-        string amount_completed = " (" + currentItems.ToString() + "/" + itemsRequired + ")";
-        return (Description + amount_completed);
+        List<(bool, string)> taskList = new List<(bool, string)>();
+
+        for (int i = 0; i < itemNeeded.Count; i++)
+        {
+            string amount_completed = " (" + currentItems[i] + "/" + itemsRequired[i] + ")";
+            taskList.Add(((currentItems[i] >= itemsRequired[i]), (Descripions[i] + amount_completed)));
+        }
+
+        return taskList;
     }
 
     public override ObjectiveType ReturnType()

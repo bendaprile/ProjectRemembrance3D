@@ -10,7 +10,8 @@ public class WorldMenuController : MonoBehaviour
     [SerializeField] private Transform DetailViewInfo;
 
     [SerializeField] private RectTransform QuestUIPrefab;
-    [SerializeField] private RectTransform QuestDetailUIPrefab;
+    [SerializeField] private RectTransform CQDtext;
+    [SerializeField] private RectTransform ComplextQuestDetailUIPrefab;
     [SerializeField] private RectTransform SpacerUIPrefab;
 
     private bool First_run = true;
@@ -25,10 +26,10 @@ public class WorldMenuController : MonoBehaviour
             Destroy(iter.gameObject);
         }
 
-        Transform tempPrefab;
-        tempPrefab = Instantiate(QuestDetailUIPrefab, DetailViewInfo);
+
+        
         QuestObjective tempActiveQuest = tempList[iter_in].GetComponent<QuestTemplate>().returnActiveObjective();
-        tempPrefab.GetComponentInChildren<Text>().text = tempActiveQuest.ReturnDescription();
+        SetupComplex(tempActiveQuest);
 
         Instantiate(SpacerUIPrefab, DetailViewInfo);
 
@@ -36,10 +37,36 @@ public class WorldMenuController : MonoBehaviour
 
         for(int i = tempObjList.Count - 1; i >= 0; i--)
         {
-            tempPrefab = Instantiate(QuestDetailUIPrefab, DetailViewInfo);
-            tempPrefab.GetComponentInChildren<Text>().text = tempObjList[i].ReturnDescription();
+            SetupComplex(tempObjList[i]);
         }
     }
+
+    private void SetupComplex(QuestObjective tempObj)
+    {
+        RectTransform tempPrefab = Instantiate(ComplextQuestDetailUIPrefab, DetailViewInfo);
+
+        List<(bool, string)> taskList = tempObj.ReturnTasks();
+
+        tempPrefab.sizeDelta = new Vector2(tempPrefab.sizeDelta.x, 0);
+        foreach ((bool, string) task in taskList)
+        {
+            Debug.Log(task);
+            Transform textPrefab = Instantiate(CQDtext, tempPrefab);
+
+            if(task.Item1)
+            {
+                textPrefab.GetComponent<Text>().color = Color.gray;
+            }
+            else
+            {
+                textPrefab.GetComponent<Text>().color = Color.black;
+            }
+
+            textPrefab.GetComponent<Text>().text = task.Item2;
+            tempPrefab.sizeDelta = new Vector2(tempPrefab.sizeDelta.x, tempPrefab.sizeDelta.y + 50);
+        }
+    }
+
 
     private void OnEnable()
     {
