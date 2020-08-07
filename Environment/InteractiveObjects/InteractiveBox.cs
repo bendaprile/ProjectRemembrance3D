@@ -3,52 +3,60 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class InteractiveBox : InteractiveObject
+public class InteractiveBox : InteractiveThing
 {
+    [SerializeField] protected Material[] materials;
     [SerializeField] int LockPickingRequirement;
     [SerializeField] public List<GameObject> Items;
 
-    private PlayerInRadius PIR;
-    private GameObject Text;
+
 
 
     private UIController UIControl;
-    private GameObject player;
+
     private PlayerStats playerStats;
+    private MeshRenderer mesh;
 
 
     protected override void Start()
     {
         base.Start();
-        PIR = GetComponentInChildren<PlayerInRadius>();
-        Text = transform.Find("Text").gameObject;
-        player = GameObject.Find("Player");
+        mesh = GetComponent<MeshRenderer>();
         UIControl = GameObject.Find("UI").GetComponent<UIController>();
         playerStats = player.GetComponent<PlayerStats>();
     }
 
-    // TODO: Handle Input through InputManager and not direct key references
-    private void Update()
+    public override void CursorOverObject()
     {
-        if(isCursorOverhead && PIR.isTrue)
+        base.CursorOverObject();
+        set_item_material(1);
+    }
+
+    public override void CursorLeftObject()
+    {
+        base.CursorLeftObject();
+        set_item_material(0);
+    }
+
+    protected virtual void set_item_material(int i)
+    {
+        mesh.material = materials[i];
+    }
+
+    // TODO: Handle Input through InputManager and not direct key references
+    protected override void ActivateLogic()
+    {
+        if (playerStats.ReturnNonCombatSkill(SkillsEnum.Larceny) >= LockPickingRequirement)
         {
-            Text.SetActive(true);
-            if (playerStats.ReturnNonCombatSkill(SkillsEnum.Larceny) >= LockPickingRequirement)
+            Text.GetComponent<TextMeshPro>().text = "(E) Open";
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                Text.GetComponent<TextMeshPro>().text = "(E) Open";
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    UIControl.OpenInteractiveMenu(this.gameObject);
-                }
-            }
-            else
-            {
-                Text.GetComponent<TextMeshPro>().text = ("Requirement " + LockPickingRequirement);
+                UIControl.OpenInteractiveMenu(this.gameObject);
             }
         }
         else
         {
-            Text.SetActive(false);
+            Text.GetComponent<TextMeshPro>().text = ("Requirement " + LockPickingRequirement);
         }
     }
 }

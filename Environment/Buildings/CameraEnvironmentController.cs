@@ -54,6 +54,7 @@ public class CameraEnvironmentController : MonoBehaviour
 
     public IEnumerator ExitBuilding()
     {
+
         for (float i = 0; i < delay; i += Time.deltaTime)
         {
             sun.intensity += decreaseSunIntensity * Time.deltaTime / delay;

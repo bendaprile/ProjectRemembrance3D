@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class CursorLogic : MonoBehaviour
 {
-    private GameObject currentInteractiveObject, lastInteractiveObject;
+    private GameObject currentInteractiveThing, lastInteractiveThing;
 
     void Start()
     {
-        currentInteractiveObject = null;
-        lastInteractiveObject = null;
+        currentInteractiveThing = null;
+        lastInteractiveThing = null;
     }
 
     // Update is called once per frame
@@ -22,32 +22,32 @@ public class CursorLogic : MonoBehaviour
     private void InteractiveObjectFunction()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        int layerMask = (LayerMask.GetMask("InteractiveObject"));
+        int layerMask = (LayerMask.GetMask("InteractiveThing"));
         RaycastHit hitray;
         Vector3 mousePos3d = new Vector3(0f, 0f, 0f);
 
 
-        lastInteractiveObject = currentInteractiveObject;
+        lastInteractiveThing = currentInteractiveThing;
         if (Physics.Raycast(ray, out hitray, Mathf.Infinity, layerMask))
         {
-            currentInteractiveObject = hitray.transform.gameObject;
+            currentInteractiveThing = hitray.transform.gameObject;
         }
         else
         {
-            currentInteractiveObject = null;
+            currentInteractiveThing = null;
         }
 
 
-        if (currentInteractiveObject != lastInteractiveObject)
+        if (currentInteractiveThing != lastInteractiveThing)
         {
-            if (currentInteractiveObject != null)
+            if (currentInteractiveThing != null)
             {
-                currentInteractiveObject.GetComponent<InteractiveObject>().CursorOverObject();
+                currentInteractiveThing.GetComponent<InteractiveThing>().CursorOverObject();
             }
 
-            if (lastInteractiveObject != null)
+            if (lastInteractiveThing != null)
             {
-                lastInteractiveObject.GetComponent<InteractiveObject>().CursorLeftObject();
+                lastInteractiveThing.GetComponent<InteractiveThing>().CursorLeftObject();
             }
         }
     }
