@@ -13,12 +13,13 @@ public class DiaParent : MonoBehaviour
     [SerializeField] private GameObject NpcTextPanel;
     [SerializeField] private GameObject ContinueButton; 
     [SerializeField] private Transform DiaPlayerPanel;
+    [SerializeField] private Transform DiaNoOptions;
 
     bool first_setup = true;
-    string next_dest; //used when there is no player input
+    Transform next_dest; //used when there is no player input
 
 
-    public void SetupDia(Transform DiaData, string startingLine)
+    public void SetupDia(Transform DiaData, Transform startingLine)
     {
         if (first_setup)
         {
@@ -29,29 +30,30 @@ public class DiaParent : MonoBehaviour
         {
             npcLines.Add(child);
         }
-        next_dest = ""; //used when there is no player input
+        next_dest = null; //used when there is no player input
         ViewText(startingLine);
     }
 
 
-    public void Continue(string dest)
+    public void Continue(Transform dest)
     {
-        if(dest != "") //Player input
-        {
-            ViewText(dest);
-        }
-        else if(next_dest != "") //next line
+        if(dest == DiaNoOptions) //next line // this object is a child of the continue button, but it doesnt matter where it is. Cannot send null
         {
             ViewText(next_dest);
         }
+        else if(dest != null) //next line
+        {
+            ViewText(dest);
+        }
         else
         {
+            ResetNpcLines();
             uIcontroller.DialogueMenuBool();
         }
     }
 
 
-    private void ViewText(string iden)
+    private void ViewText(Transform iden)
     {
         foreach(Transform child in DiaPlayerPanel) //clean player panel
         {
@@ -61,7 +63,7 @@ public class DiaParent : MonoBehaviour
         Transform selectedLine = null;
         foreach(Transform line in npcLines) //find next line
         {
-            if(line.name == iden)
+            if(line == iden)
             {
                 selectedLine = line;
             }
@@ -73,8 +75,8 @@ public class DiaParent : MonoBehaviour
         }
         else
         {
-            npcText.text = selectedLine.GetComponent<DiaNpcLine>().Line;
-            next_dest = selectedLine.GetComponent<DiaNpcLine>().Dest;
+            npcText.text = selectedLine.GetComponent<DiaNpcLine>().return_line();
+            next_dest = selectedLine.GetComponent<DiaNpcLine>().return_dest();
 
             bool is_playerLines = SetupPlayerLines(selectedLine);
 
@@ -98,13 +100,24 @@ public class DiaParent : MonoBehaviour
         bool is_playerLines = false;
         foreach (Transform child in selectedLine)
         {
-            DiaPlayerLine TempChild = child.GetComponent<DiaPlayerLine>();
-            is_playerLines = true;
-            GameObject temp = Instantiate(PlayerLinePrefab, DiaPlayerPanel);
-            temp.GetComponent<DiaPlayerUIPrefab>().Setup(TempChild);
+            if (child.gameObject.activeSelf)
+            {
+                DiaPlayerLine TempChild = child.GetComponent<DiaPlayerLine>();
+                is_playerLines = true;
+                GameObject temp = Instantiate(PlayerLinePrefab, DiaPlayerPanel);
+                temp.GetComponent<DiaPlayerUIPrefab>().Setup(TempChild);
+            }
         }
 
         return is_playerLines;
+    }
+
+    private void ResetNpcLines()
+    {
+        foreach(Transform npcLine in npcLines)
+        {
+            npcLine.GetComponent<DiaNpcLine>().Reset();
+        }
     }
 
     private void OnDisable()

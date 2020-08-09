@@ -10,10 +10,12 @@ public class PlayerStats : MonoBehaviour
     private Energy PlayerEnergy;
     private CombatChecker combatChecker;
     private UIController uIController;
+    private EventQueue eventQueue;
 
     //////////////////////////////////////
     private int level;
     private int current_exp;
+    private bool LevelUpQued = false;
 
     public void AddEXP(int exp_in)
     {
@@ -42,12 +44,27 @@ public class PlayerStats : MonoBehaviour
 
     private void LevelUp()
     {
-        if ((current_exp > level * 1000) && !combatChecker.enemies_nearby)
-        {  
-            current_exp -= level * 1000;
-            level += 1;
-            UpdateBaseAttributes();
-            uIController.LevelUpMenuBool(true);
+        if (current_exp > level * 1000)
+        {
+            if (!LevelUpQued)
+            {
+                LevelUpQued = true;
+
+                /////
+                EventData tempEvent = new EventData();
+                tempEvent.Setup(EventTypeEnum.LevelUp, "");
+                eventQueue.AddEvent(tempEvent);
+                /////
+            }
+
+            if (!combatChecker.enemies_nearby)
+            {
+                current_exp -= level * 1000;
+                level += 1;
+                UpdateBaseAttributes();
+                uIController.LevelUpMenuBool(true);
+                LevelUpQued = false;
+            }
         }
     }
 
@@ -248,6 +265,7 @@ public class PlayerStats : MonoBehaviour
         PlayerEnergy = Player.transform.GetComponent<Energy>();
         combatChecker = Player.transform.GetComponentInChildren<CombatChecker>();
         uIController = GameObject.Find("UI").GetComponent<UIController>();
+        eventQueue = GameObject.Find("EventDisplay").GetComponent<EventQueue>();
 
         for (int i = 0; i < STARTUP_DECLARATIONS.Number_of_Attributes; i++)
         {

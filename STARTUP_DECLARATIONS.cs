@@ -26,9 +26,11 @@ public enum ConsumableType { Restoring }
 
 public enum ItemClass { D, C, B, A, S }
 
-public enum ObjectiveType { NOTHING, Fetch, Kill, Talk }
+public enum ObjectiveType { NOTHING, Fetch, GenericKill, Talk }
 
 public enum MoveState{Idle, Walking, Running, Rolling, Melee}
+
+public enum EventTypeEnum { QuestObjCompleted, QuestCompleted, QuestStarted, LevelUp }
 
 public static class STARTUP_DECLARATIONS
 {

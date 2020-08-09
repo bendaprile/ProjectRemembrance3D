@@ -11,7 +11,7 @@ public class QuestTemplate : MonoBehaviour
     private GameObject ActiveObjective;
     private List<GameObject> CompletedObjectiveList = new List<GameObject>();
 
-
+    private EventQueue eventQueue;
     private QuestsHolder questsHolder;
 
     public QuestObjective returnActiveObjective()
@@ -29,9 +29,14 @@ public class QuestTemplate : MonoBehaviour
         return temp;
     }
 
+    private void Awake()
+    {
+        eventQueue = GameObject.Find("EventDisplay").GetComponent<EventQueue>();
+        questsHolder = GameObject.Find("QuestsHolder").GetComponent<QuestsHolder>();
+    }
+
     public void QuestStart()
     {
-        questsHolder = GameObject.Find("QuestsHolder").GetComponent<QuestsHolder>();
         bool first = true;
         foreach(Transform child in transform)
         {
@@ -52,6 +57,12 @@ public class QuestTemplate : MonoBehaviour
     {
         CompletedObjectiveList.Add(ActiveObjective);
 
+        /////
+        EventData tempEvent = new EventData();
+        tempEvent.Setup(EventTypeEnum.QuestObjCompleted, GetComponentInParent<QuestTemplate>().QuestName);
+        eventQueue.AddEvent(tempEvent);
+        /////
+
         ActiveObjective = null;
         if (HiddenObjectiveList.Count > 0)
         {
@@ -63,6 +74,7 @@ public class QuestTemplate : MonoBehaviour
         {
             questsHolder.FullQuestCompleted(QuestName);
         }
+
 
     }
 }

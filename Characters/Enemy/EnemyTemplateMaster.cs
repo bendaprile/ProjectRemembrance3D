@@ -8,6 +8,7 @@ public class EnemyTemplateMaster : MonoBehaviour
     [SerializeField] protected float destroyAfterDeathDelay = 60f;
     [SerializeField] bool stunable = true;
     [SerializeField] bool knockbackable = true;
+    [SerializeField] public string EnemyTypeName;
     public bool AIenabled;
 
     protected GameObject player;
@@ -17,7 +18,6 @@ public class EnemyTemplateMaster : MonoBehaviour
     protected NavMeshAgent agent;
     protected Health health;
     protected Transform Hitbox;
-
 
     // Roam logic
     protected float roam_speed = 0;
@@ -85,6 +85,7 @@ public class EnemyTemplateMaster : MonoBehaviour
     public virtual void Death()
     {
         player.GetComponent<PlayerStats>().AddEXP(exp_reward);
+        player.GetComponentInChildren<QuestsHolder>().CheckGenericKillObjectives(transform.gameObject, new Vector2(transform.position.x, transform.position.y));
 
         // Freeze the position and remove collision of the enemy
         rB.constraints = RigidbodyConstraints.FreezeAll;

@@ -50,7 +50,6 @@ public class WorldMenuController : MonoBehaviour
         tempPrefab.sizeDelta = new Vector2(tempPrefab.sizeDelta.x, 0);
         foreach ((bool, string) task in taskList)
         {
-            Debug.Log(task);
             Transform textPrefab = Instantiate(CQDtext, tempPrefab);
 
             if(task.Item1)

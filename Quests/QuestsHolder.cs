@@ -7,20 +7,27 @@ public class QuestsHolder : MonoBehaviour
     private List<GameObject> CompletedQuests = new List<GameObject>();
     private List<GameObject> ActiveQuests = new List<GameObject>();
 
-
+    private EventQueue eventQueue;
     private PlayerStats playerStats;
+    private EventData tempEvent;
 
 
     void Start()
     {
+        tempEvent = new EventData();
         playerStats = GameObject.Find("Player").GetComponent<PlayerStats>();
+        eventQueue = GameObject.Find("EventDisplay").GetComponent<EventQueue>();
     }
 
     public void AddQuest(Transform Quest)
     {
+
+        QuestTemplate tempQuest = Quest.GetComponent<QuestTemplate>();
+        tempEvent.Setup(EventTypeEnum.QuestStarted, tempQuest.QuestName);
+        eventQueue.AddEvent(tempEvent);
         Quest.parent = transform;
         ActiveQuests.Add(Quest.gameObject);
-        Quest.GetComponent<QuestTemplate>().QuestStart();
+        tempQuest.QuestStart();
     }
 
     public List<GameObject> ReturnActiveQuests()
@@ -39,6 +46,9 @@ public class QuestsHolder : MonoBehaviour
                 CompletedQuests.Add(iter);
                 ActiveQuests.Remove(iter);
                 playerStats.AddEXP(QuestiterScript.xp_reward);
+
+                tempEvent.Setup(EventTypeEnum.QuestCompleted, UniqueName);
+                eventQueue.AddEvent(tempEvent);
                 break;
             }
             temp_loc += 1;
@@ -55,6 +65,19 @@ public class QuestsHolder : MonoBehaviour
             if (TempActiveObj.ReturnType() == ObjectiveType.Fetch)
             {
                 ((FetchObjective)TempActiveObj).UpdateItemCount(itemStats, itemAdd, location);
+            }
+        }
+    }
+
+    public void CheckGenericKillObjectives(GameObject enemy, Vector2 enemyLoc)
+    {
+        EnemyTemplateMaster enemyStats = enemy.GetComponent<EnemyTemplateMaster>();
+        for (int i = ActiveQuests.Count - 1; i >= 0; i--) //A quest could be completed
+        {
+            QuestObjective TempActiveObj = ActiveQuests[i].GetComponent<QuestTemplate>().returnActiveObjective();
+            if (TempActiveObj.ReturnType() == ObjectiveType.GenericKill)
+            {
+                ((GenericKillObjective)TempActiveObj).UpdateKillCounts(enemyStats, enemyLoc);
             }
         }
     }

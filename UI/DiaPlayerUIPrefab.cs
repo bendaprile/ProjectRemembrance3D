@@ -60,7 +60,7 @@ public class DiaPlayerUIPrefab : MonoBehaviour
             viewable_text += "[" + STARTUP_DECLARATIONS.CombatSkillsEnumReverse[(int)TempChild.CombatSkillCheck] + " (" + charcskill + "/" + TempChild.CombatSkillLevelReq + ")] ";
         }
 
-        viewable_text += TempChild.Line;
+        viewable_text += TempChild.return_line();
 
         textRef.text = viewable_text;
 
@@ -72,12 +72,12 @@ public class DiaPlayerUIPrefab : MonoBehaviour
     {
         if (pressable)
         {
-            if(TempChildStorage.Quest != null)
+            if(TempChildStorage.return_quest() != null)
             {
-                QH.AddQuest(TempChildStorage.Quest);
+                QH.AddQuest(TempChildStorage.return_quest());
             }
                 
-            diaParent.Continue(TempChildStorage.Dest);
+            diaParent.Continue(TempChildStorage.return_dest());
         }
     }
 

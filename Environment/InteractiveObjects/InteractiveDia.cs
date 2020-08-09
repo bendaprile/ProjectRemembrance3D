@@ -5,12 +5,12 @@ using UnityEngine;
 public class InteractiveDia : InteractiveThing
 {
     [SerializeField] private Transform DiaTrans;
-    [SerializeField] private string StartingPoint;
+    [SerializeField] private Transform StartingPoint;
 
-    [SerializeField] private NPC npc;
+    //[SerializeField] private NPC npc;
 
 
-    public void UpdateStartingPoint(string input)
+    public void UpdateStartingPoint(Transform input)
     {
         StartingPoint = input;
     }
@@ -21,10 +21,10 @@ public class InteractiveDia : InteractiveThing
         {
             UIControl.DialogueMenuBool(DiaTrans, StartingPoint);
 
-            if(npc != null)
-            {
-                npc.DiaStarted();
-            }
+            //if(npc != null)
+            //{
+            //    npc.DiaStarted();
+            //}
         }
     }
 }

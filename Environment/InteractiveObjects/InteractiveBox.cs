@@ -10,10 +10,6 @@ public class InteractiveBox : InteractiveThing
     [SerializeField] public List<GameObject> Items;
 
 
-
-
-    private UIController UIControl;
-
     private PlayerStats playerStats;
     private MeshRenderer mesh;
 

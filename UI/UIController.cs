@@ -98,7 +98,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void DialogueMenuBool(Transform DiaData = null, string startingLine = "")
+    public void DialogueMenuBool(Transform DiaData = null, Transform startingLine = null)
     {
         if (DiaData != null)
         {
