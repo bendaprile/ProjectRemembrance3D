@@ -25,8 +25,6 @@ public class WorldMenuController : MonoBehaviour
         {
             Destroy(iter.gameObject);
         }
-
-
         
         QuestObjective tempActiveQuest = tempList[iter_in].GetComponent<QuestTemplate>().returnActiveObjective();
         SetupComplex(tempActiveQuest);
@@ -37,8 +35,14 @@ public class WorldMenuController : MonoBehaviour
 
         for(int i = tempObjList.Count - 1; i >= 0; i--)
         {
-            SetupComplex(tempObjList[i]);
+            SetupComplex(tempObjList[i]);   
         }
+    }
+
+    public void QuestSetFocus(int iter_in)
+    {
+        QuestsHolder.QuestSetFocus(tempList[iter_in]);
+        UpdateFocusUI(QuestsHolder.ReturnFocus());
     }
 
     private void SetupComplex(QuestObjective tempObj)
@@ -87,6 +91,16 @@ public class WorldMenuController : MonoBehaviour
             Transform tempPrefab = Instantiate(QuestUIPrefab, QuestViewInfo);
             tempPrefab.GetComponent<QuestNameUIPrefab>().Setup(quest, iter);
             iter += 1;
+        }
+
+        UpdateFocusUI(QuestsHolder.ReturnFocus());
+    }
+
+    private void UpdateFocusUI(GameObject temp)
+    {
+        foreach(Transform child in QuestViewInfo)
+        {
+            child.GetComponent<QuestNameUIPrefab>().CheckFocus(temp);
         }
     }
 

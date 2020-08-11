@@ -9,7 +9,9 @@ public class ItemMaster : MonoBehaviour
     public string ItemName;
     public ItemClass ItemClass;
     public ItemTypeEnum ItemType;
+    public bool LockForQuest = false;
     [SerializeField] public Sprite Item_sprite;
+
 
 
 

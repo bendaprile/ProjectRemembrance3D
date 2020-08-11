@@ -17,27 +17,30 @@ public class DiaParent : MonoBehaviour
 
     bool first_setup = true;
     Transform next_dest; //used when there is no player input
+    private DiaRoot diaRoot;
 
 
-    public void SetupDia(Transform DiaData, Transform startingLine)
+    public void SetupDia(Transform DiaRoot)
     {
         if (first_setup)
         {
             FirstSetup();
         }
 
-        foreach(Transform child in DiaData)
+        diaRoot = DiaRoot.GetComponent<DiaRoot>();
+
+        foreach (Transform child in DiaRoot)
         {
             npcLines.Add(child);
         }
         next_dest = null; //used when there is no player input
-        ViewText(startingLine);
+        ViewText(diaRoot.ReturnStarting());
     }
 
 
     public void Continue(Transform dest)
     {
-        if(dest == DiaNoOptions) //next line // this object is a child of the continue button, but it doesnt matter where it is. Cannot send null
+        if(dest == DiaNoOptions) //next line // this object is a child of the continue button, but it doesnt matter where it is. Cannot a button cannot send null, so I have this random transform
         {
             ViewText(next_dest);
         }
@@ -90,8 +93,6 @@ public class DiaParent : MonoBehaviour
                 ContinueButton.SetActive(true);
                 DiaPlayerPanel.gameObject.SetActive(false);
             }
-
-
         }
     }
 

@@ -98,7 +98,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void DialogueMenuBool(Transform DiaData = null, Transform startingLine = null)
+    public void DialogueMenuBool(Transform DiaData = null)
     {
         if (DiaData != null)
         {
@@ -106,7 +106,7 @@ public class UIController : MonoBehaviour
             Map.SetActive(false);
             inescapableExternalMenu = true;
             DialogueMenu.SetActive(true);
-            DialogueMenu.GetComponent<DiaParent>().SetupDia(DiaData, startingLine);
+            DialogueMenu.GetComponent<DiaParent>().SetupDia(DiaData);
         }
         else
         {

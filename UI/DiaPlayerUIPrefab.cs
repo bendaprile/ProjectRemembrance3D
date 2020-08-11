@@ -76,6 +76,16 @@ public class DiaPlayerUIPrefab : MonoBehaviour
             {
                 QH.AddQuest(TempChildStorage.return_quest());
             }
+
+            if(TempChildStorage.return_new_start() != null)
+            {
+                TempChildStorage.GetComponentInParent<DiaRoot>().ModifyStarting(TempChildStorage.return_new_start());
+            }
+
+            if(TempChildStorage.return_marked_quest_objective() != null)
+            {
+                QH.CheckExternalObjectiveCompletion(TempChildStorage.return_marked_quest_objective());
+            }
                 
             diaParent.Continue(TempChildStorage.return_dest());
         }

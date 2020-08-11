@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class GenericKillObjective : QuestObjective
 {
@@ -9,23 +10,22 @@ public class GenericKillObjective : QuestObjective
     [SerializeField] private List<string> Descriptions = new List<string>();
 
     [SerializeField] private bool LocationRequired = false;
-    [SerializeField] private bool LocationHint = false;
-    [SerializeField] private List<Vector2> CenterPoint = new List<Vector2>();
-    [SerializeField] private List<float> Radius = new List<float>();
-
 
     private List<EnemyTemplateMaster> enemyNeededSpecs = new List<EnemyTemplateMaster>();
     private List<int> currentKills = new List<int>();
 
     public override void initialize()
     {
+        Assert.AreEqual(NumberOfTasks, enemyNeeded.Count);
+        Assert.AreEqual(enemyNeeded.Count, enemyNumbers.Count);
+        Assert.AreEqual(enemyNumbers.Count, Descriptions.Count);
+
         base.initialize();
-        for (int i = 0; i < enemyNeeded.Count; i++)
+        for (int i = 0; i < NumberOfTasks; i++)
         {
             currentKills.Add(0);
             enemyNeededSpecs.Add(enemyNeeded[i].GetComponent<EnemyTemplateMaster>());
         }
-
     }
 
     public void UpdateKillCounts(EnemyTemplateMaster etm, Vector2 loc)
@@ -65,10 +65,15 @@ public class GenericKillObjective : QuestObjective
         for (int i = 0; i < enemyNeeded.Count; i++)
         {
             string amount_completed = " (" + currentKills[i] + "/" + enemyNumbers[i] + ")";
-            taskList.Add(((currentKills[i] >= enemyNumbers[i]), (Descriptions[i] + amount_completed)));
+            taskList.Add(((TaskComplete(i)), (Descriptions[i] + amount_completed)));
         }
 
         return taskList;
+    }
+
+    protected override bool TaskComplete(int i)
+    {
+        return currentKills[i] >= enemyNumbers[i];
     }
 
     public override ObjectiveType ReturnType()
@@ -76,20 +81,15 @@ public class GenericKillObjective : QuestObjective
         return ObjectiveType.GenericKill;
     }
 
-    protected override void CheckStatus()
+    public override (bool, List<(Vector2, float)>) ReturnLocs()
     {
-        bool objFinished = true;
-        for (int i = 0; i < enemyNeeded.Count; i++)
+        if (LocationHint || LocationRequired)
         {
-            if (currentKills[i] < enemyNumbers[i])
-            {
-                objFinished = false;
-            }
+            return (LocationRequired, ReturnLocsHelper());
         }
-
-        if (objFinished)
+        else
         {
-            questTemplate.ObjectiveFinished();
+            return (false, new List<(Vector2, float)>());
         }
     }
 }

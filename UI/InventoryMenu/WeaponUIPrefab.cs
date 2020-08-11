@@ -45,7 +45,12 @@ public class WeaponUIPrefab : MonoBehaviour
             InnerBoxLeft.Find("D_Value").GetComponent<Text>().text = temp.DT.ToString();
         }
 
-
+        if (itemProperties.LockForQuest)
+        {
+            transform.Find("ItemDelete").GetComponent<Button>().interactable = false;
+            transform.Find("ItemEquip0").GetComponent<Button>().interactable = false;
+            transform.Find("ItemEquip1").GetComponent<Button>().interactable = false;
+        }
     }
 
     public void DisplayStats()

@@ -52,6 +52,12 @@ public class ConsumableUIPrefab : MonoBehaviour
             InnerBoxLeft.Find("D_Name").GetComponent<Text>().text = "Cooldown: ";
             InnerBoxLeft.Find("D_Value").GetComponent<Text>().text = temp.cooldown.ToString();
         }
+
+        if (itemProperties.LockForQuest)
+        {
+            transform.Find("ItemDelete").GetComponent<Button>().interactable = false;
+            transform.Find("ItemEquip").GetComponent<Button>().interactable = false;
+        }
     }
 
     public void DisplayStats()

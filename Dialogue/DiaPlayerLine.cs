@@ -15,11 +15,32 @@ public class DiaPlayerLine : MonoBehaviour
     [SerializeField] public int CombatSkillLevelReq = 0; //0 if no check
     [SerializeField] public CombatSkillsEnum CombatSkillCheck;
 
-    [SerializeField] public List<GameObject> DisableList; //If used for Dia can only disable player options
+    [SerializeField] private Transform NewStartingLine;
+    [SerializeField] private List<GameObject> DisableList; //If used for Dia can only disable player options
+
+    private GameObject QuestObjectiveReturn; //null if no quest
+
+
+
+    public void mark_dia_for_quest(GameObject quest_in)
+    {
+        gameObject.SetActive(true);
+        QuestObjectiveReturn = quest_in;
+    }
+
+    public GameObject return_marked_quest_objective()
+    {
+        return QuestObjectiveReturn;
+    }
 
     public string return_line()
     {
         return Line;
+    }
+
+    public Transform return_new_start()
+    {
+        return NewStartingLine;
     }
 
     public Transform return_dest() //This means that it is clicked

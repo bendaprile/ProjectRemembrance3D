@@ -5,18 +5,41 @@ using UnityEngine.UI;
 
 public class QuestNameUIPrefab : MonoBehaviour
 {
-    int iterStorage;
+    [SerializeField] private Transform Details;
+    [SerializeField] private Transform SetActive;
+
+    private GameObject QuestRef;
+    private int iterStorage;
+    private WorldMenuController WorldMenu;
 
     public void Setup(GameObject quest, int iter)
     {
+        QuestRef = quest;
         QuestTemplate questScript = quest.GetComponent<QuestTemplate>();
         iterStorage = iter;
-        gameObject.GetComponentInChildren<Text>().text = questScript.QuestName;
+        Details.GetComponentInChildren<Text>().text = questScript.QuestName;
+        WorldMenu = GameObject.Find("WorldMenu").GetComponent<WorldMenuController>();
     }
 
-    public void ButtonPressed()
+    public void CheckFocus(GameObject temp)
     {
-        GameObject WorldMenu = GameObject.Find("WorldMenu");
-        WorldMenu.GetComponent<WorldMenuController>().GetDetails(iterStorage);
+        if(temp == QuestRef)
+        {
+            transform.GetComponent<Image>().color = Color.red;
+        }
+        else
+        {
+            transform.GetComponent<Image>().color = Color.white;
+        }
+    }
+
+    public void DetailButtonPressed()
+    {
+        WorldMenu.GetDetails(iterStorage);
+    }
+
+    public void ActiveButtonPressed()
+    {
+        WorldMenu.QuestSetFocus(iterStorage);
     }
 }

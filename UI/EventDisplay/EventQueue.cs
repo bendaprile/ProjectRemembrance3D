@@ -12,32 +12,33 @@ public class EventQueue : MonoBehaviour
 
     private Queue<EventData> que = new Queue<EventData>();
     private EventData ActiveEvent;
-    private bool proccessing_data;
+    private float time_remaining;
 
     void Start()
     {
-        proccessing_data = false;
-    }
-
-    IEnumerator proccess()
-    {   
-        MainText.text = GetMainText(ActiveEvent.eventType);
-        SecondaryText.text = ActiveEvent.SecondaryText;
-        yield return new WaitForSeconds(GetDelay(ActiveEvent.eventType));
-        proccessing_data = false;
+        time_remaining = 0;
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        if(!uiControl.GamePaused && !proccessing_data && que.Count > 0)
+        if(!uiControl.GamePaused && time_remaining <= 0 && que.Count > 0)
         {
-            proccessing_data = true;
             ActiveEvent = que.Dequeue();
-            StartCoroutine(proccess());
+            time_remaining = GetDelay(ActiveEvent.eventType);
+            MainText.text = GetMainText(ActiveEvent.eventType);
+            SecondaryText.text = ActiveEvent.SecondaryText;
         }
-        Panel.SetActive(proccessing_data);
+        else if (time_remaining > 0)
+        {
+            Panel.SetActive(true);
+            time_remaining -= Time.deltaTime;
+        }
+        else
+        {
+            Panel.SetActive(false);
+        }
     }
 
     public void AddEvent(EventData event_in)
